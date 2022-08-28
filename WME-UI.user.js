@@ -12,6 +12,8 @@
 // @exclude      https://beta.waze.com/user/editor*
 // @icon         https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://anton.shevchuk.name&size=64
 // @grant        none
+// @supportURL   https://github.com/AntonShevchuk/wme-ui/issues
+// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=antonshevchuk@gmail.com&item_name=Greasy+Fork+donation
 // ==/UserScript==
 
 /* jshint esversion: 8 */
@@ -251,7 +253,6 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
     return group
   }
 }
-
 
 class WMEUIHelperTab extends WMEUIHelperContainer {
   constructor (uid, id, title, description = null, attributes = {}) {
