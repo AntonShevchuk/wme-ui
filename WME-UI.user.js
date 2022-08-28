@@ -52,6 +52,354 @@ class WMEUI {
 }
 
 /**
+ * God class, create it once
+ */
+class WMEUIHelper {
+  constructor (uid) {
+    this.uid = WMEUI.normalize(uid)
+    this.index = 0
+  }
+
+  generateId () {
+    this.index++
+    return this.uid + '-' + this.index
+  }
+
+  createPanel (title, description = null, attributes = {}) {
+    return new WMEUIHelperPanel(this.uid, this.generateId(), title, description, attributes)
+  }
+
+  createTab (title, description = null, attributes = {}) {
+    return new WMEUIHelperTab(this.uid, this.generateId(), title, description, attributes)
+  }
+
+  createModal (title, description = null) {
+    return new WMEUIHelperModal(this.uid, this.generateId(), title, description)
+  }
+
+  createFieldset (title, description = null) {
+    return new WMEUIHelperFieldset(this.uid, this.generateId(), title, description)
+  }
+}
+
+/**
+ * Basic for all UI elements
+ */
+class WMEUIHelperElement {
+  constructor (uid, id, title, description = null, attributes = {}) {
+    this.uid = uid
+    this.id = id
+    this.title = title
+    this.description = description
+    this.attributes = attributes
+    this.domElement = null
+  }
+
+  /**
+   * @param {HTMLElement} element
+   * @return {HTMLElement}
+   */
+  applyAttributes (element) {
+    for (let attr in this.attributes) {
+      if (this.attributes.hasOwnProperty(attr)) {
+        element[attr] = this.attributes[attr]
+      }
+    }
+    return element
+  }
+
+  /**
+   * @return {HTMLElement}
+   */
+  html () {
+    if (!this.domElement) {
+      this.domElement = this.toHTML()
+      this.domElement.className += ' ' + this.uid + ' ' + this.uid + '-' + this.id
+    }
+    return this.domElement
+  }
+
+  /**
+   * @return {HTMLElement}
+   */
+  toHTML () {
+    throw new Error('Abstract method')
+  }
+}
+
+
+/**
+ * Basic for all UI containers
+ */
+class WMEUIHelperContainer extends WMEUIHelperElement {
+  constructor (uid, id, title, description = null, attributes = {}) {
+    super(uid, id, title, description, attributes)
+    this.elements = []
+    if (description) {
+      this.addText('description', description)
+    }
+  }
+
+  addElement (element) {
+    this.elements.push(element)
+  }
+
+  // For Tab Panel Modal Fieldset
+  addText (id, text) {
+    return this.addElement(new WMEUIHelperText(this.uid, id, text))
+  }
+
+  // For Tab Panel Modal
+  addFieldset (id, title, description) {
+    return this.addElement(new WMEUIHelperFieldset(this.uid, id, title, description))
+  }
+
+  // For Tab Panel Modal Fieldset
+  addCheckbox (id, title, description, callback, checked = false) {
+    return this.addElement(
+      new WMEUIHelperControlInput(this.uid, id, title, description, {
+        'id': this.uid + '-' + id,
+        'onclick': callback,
+        'type': 'checkbox',
+        'value': 1,
+        'checked': checked,
+      })
+    )
+  }
+
+  addRadio (id, title, description, callback, value, checked = false) {
+    return this.addElement(
+      new WMEUIHelperControlInput(this.uid, id, title, description, {
+        'id': this.uid + '-' + id + '-' + value,
+        'onclick': callback,
+        'type': 'radio',
+        'value': value,
+        'checked': checked,
+      })
+    )
+  }
+
+  addRange (id, title, description, callback, min, max, value, step = 10) {
+    return this.addElement(
+      new WMEUIHelperControlInput(this.uid, id, title, description, {
+        'id': this.uid + '-' + id,
+        'onchange': callback,
+        'type': 'range',
+        'min': min,
+        'max': max,
+        'value': value,
+        'step': step,
+      })
+    )
+  }
+
+  // For Tab Panel Modal Fieldset
+  addButton (id, title, description, callback, shortcut = null) {
+    return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, shortcut))
+  }
+
+  addButtons (buttons) {
+    for (let btn in buttons) {
+      if (buttons.hasOwnProperty(btn)) {
+        this.addButton(
+          btn,
+          buttons[btn].title,
+          buttons[btn].description,
+          buttons[btn].callback,
+          buttons[btn].shortcut,
+        )
+      }
+    }
+  }
+}
+
+class WMEUIHelperFieldset extends WMEUIHelperContainer {
+  toHTML () {
+    // Fieldset legend
+    let legend = document.createElement('legend')
+    legend.innerHTML = this.title
+
+    // Container for buttons
+    let controls = document.createElement('div')
+    controls.className = 'controls'
+    // Append buttons to container
+    this.elements.forEach(element => controls.append(element.html()))
+
+    let fieldset = document.createElement('fieldset')
+    fieldset.append(legend, controls)
+    return fieldset
+  }
+}
+
+
+class WMEUIHelperPanel extends WMEUIHelperContainer {
+  toHTML () {
+    // Label of the panel
+    let label = document.createElement('label')
+        label.className = 'control-label'
+        label.innerHTML = this.title
+    // Container for buttons
+    let controls = document.createElement('div')
+        controls.className = 'controls'
+    // Append buttons to panel
+    this.elements.forEach(element => controls.append(element.html()))
+    // Build panel
+    let group = document.createElement('div')
+        group.className = 'form-group'
+        group.append(label)
+        group.append(controls)
+    return group
+  }
+}
+
+
+class WMEUIHelperTab extends WMEUIHelperContainer {
+  constructor (uid, id, title, description = null, attributes = {}) {
+    super(uid, id, title, description, attributes)
+    this.icon = attributes.icon ? attributes.icon : ''
+  }
+  container () {
+    return document.querySelector('.tab-content')
+  }
+
+  inject () {
+    this.container().append(this.html())
+  }
+
+  toHTML () {
+    // Create tab toggler
+    let li = document.createElement('li')
+        li.innerHTML = '<a href="#sidepanel-' + this.uid + '" id="' + this.uid + '" data-toggle="tab">' + this.title + '</a>'
+    document.querySelector('#user-tabs .nav-tabs').append(li)
+
+    // Label of the panel
+    let header = document.createElement('div')
+        header.className = 'panel-header-component settings-header'
+        header.innerHTML = '<div class="panel-header-component-main">' + this.icon + '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div></div>'
+
+    // Container for buttons
+    let controls = document.createElement('div')
+        controls.className = 'button-toolbar'
+
+    // Append buttons to container
+    this.elements.forEach(element => controls.append(element.html()))
+
+    // Build form group
+    let group = document.createElement('div')
+        group.className = 'form-group'
+        group.append(header)
+        group.append(controls)
+
+    // Section
+    let pane = document.createElement('div')
+        pane.id = 'sidepanel-' + this.uid // required by tab toggle, see above
+        pane.className = 'tab-pane'
+        pane.append(group)
+    return pane
+  }
+}
+
+class WMEUIHelperModal extends WMEUIHelperContainer {
+  container () {
+    return document.getElementById('panel-container')
+  }
+
+  inject () {
+    this.container().append(this.html())
+  }
+
+  toHTML () {
+    // Header and close button
+    let close = document.createElement('a')
+        close.className = 'close-panel'
+        close.onclick = function () {
+          panel.remove()
+        }
+
+    let header = document.createElement('div')
+        header.className = 'header'
+        header.innerHTML = this.title
+        header.prepend(close)
+
+    // Body
+    let body = document.createElement('div')
+        body.className = 'body'
+
+    // Append buttons to panel
+    this.elements.forEach(element => body.append(element.html()))
+
+    // Container
+    let archivePanel = document.createElement('div')
+        archivePanel.className = 'archive-panel'
+        archivePanel.append(header)
+        archivePanel.append(body)
+
+    let panel = document.createElement('div')
+        panel.className = 'panel show'
+        panel.append(archivePanel)
+
+    return panel
+  }
+}
+
+class WMEUIHelperText extends WMEUIHelperElement {
+  toHTML () {
+    let p = document.createElement('p')
+    p.innerHTML = this.title
+    return p
+  }
+}
+
+class WMEUIHelperControl extends WMEUIHelperElement {
+  constructor (uid, id, title, description, attributes = {}) {
+    super(uid, id, title, description, attributes)
+    this.attributes.name = this.id
+  }
+}
+
+class WMEUIHelperControlInput extends WMEUIHelperControl {
+  toHTML () {
+    let input = this.applyAttributes(document.createElement('input'))
+    let label = document.createElement('label')
+        label.htmlFor = input.id
+        label.innerHTML = this.title
+
+    let container = document.createElement('div')
+        container.title = this.description
+        container.className = 'controls-container'
+        container.append(input, label)
+    return container
+  }
+}
+
+class WMEUIHelperControlButton extends WMEUIHelperControl {
+  constructor (uid, id, title, description, callback, shortcut = null) {
+    super(uid, id, title, description)
+    this.callback = callback
+    if (shortcut) {
+      /* name, desc, group, title, shortcut, callback, scope */
+      new WMEUIShortcut(
+        this.uid + '-' + this.id,
+        this.description,
+        this.uid,
+        this.uid,
+        shortcut,
+        this.callback
+      )
+    }
+  }
+
+  toHTML () {
+    let button = document.createElement('button')
+        button.className = 'waze-btn waze-btn-small waze-btn-white'
+        button.innerHTML = this.title
+        button.title = this.description
+        button.onclick = this.callback
+    return button
+  }
+}
+
+/**
  * Based on the code from the WazeWrap library
  */
 class WMEUIShortcut {
