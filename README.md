@@ -26,8 +26,10 @@ UI Library for Waze Map Editor Greasy Fork scripts
 
   // Add translation
   WMEUI.addTranslation(NAME, TRANSLATION)
+
   // Add custom style
   WMEUI.addStyle(STYLE)
+
   // Create shortcut
   new WMEUIShortcut(
     NAME + '-script',        // unique name
@@ -43,5 +45,5 @@ UI Library for Waze Map Editor Greasy Fork scripts
 
 ## Links
 Author homepage: http://anton.shevchuk.name/  
-Script homepage: https://github.com/AntonShevchuk/wme-api-helper-ui/  
-GreasyFork: https://greasyfork.org/uk/scripts/389577-apihelperui/
+Script homepage: https://github.com/AntonShevchuk/wme-ui  
+GreasyFork: https://greasyfork.org/en/scripts/450320-wme-ui  
