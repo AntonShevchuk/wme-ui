@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         WME UI
-// @namespace    https://greasyfork.org/users/227648-anton-shevchuk
 // @version      0.0.1
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
+// @author       Anton Shevchuk
+// @namespace    https://greasyfork.org/users/227648-anton-shevchuk
+// @supportURL   https://github.com/AntonShevchuk/wme-ui/issues
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
 // @match        https://beta.waze.com/editor*
@@ -12,13 +14,11 @@
 // @exclude      https://beta.waze.com/user/editor*
 // @icon         https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://anton.shevchuk.name&size=64
 // @grant        none
-// @supportURL   https://github.com/AntonShevchuk/wme-ui/issues
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=antonshevchuk@gmail.com&item_name=Greasy+Fork+donation
 // ==/UserScript==
 
 /* jshint esversion: 8 */
 
-/* global jQuery, W */
+/* global W, I18n */
 
 class WMEUI {
   /**
@@ -129,7 +129,6 @@ class WMEUIHelperElement {
   }
 }
 
-
 /**
  * Basic for all UI containers
  */
@@ -233,23 +232,22 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
   }
 }
 
-
 class WMEUIHelperPanel extends WMEUIHelperContainer {
   toHTML () {
     // Label of the panel
     let label = document.createElement('label')
-        label.className = 'control-label'
-        label.innerHTML = this.title
+    label.className = 'control-label'
+    label.innerHTML = this.title
     // Container for buttons
     let controls = document.createElement('div')
-        controls.className = 'controls'
+    controls.className = 'controls'
     // Append buttons to panel
     this.elements.forEach(element => controls.append(element.html()))
     // Build panel
     let group = document.createElement('div')
-        group.className = 'form-group'
-        group.append(label)
-        group.append(controls)
+    group.className = 'form-group'
+    group.append(label)
+    group.append(controls)
     return group
   }
 }
@@ -259,6 +257,7 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     super(uid, id, title, description, attributes)
     this.icon = attributes.icon ? attributes.icon : ''
   }
+
   container () {
     return document.querySelector('.tab-content')
   }
@@ -270,32 +269,32 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
   toHTML () {
     // Create tab toggler
     let li = document.createElement('li')
-        li.innerHTML = '<a href="#sidepanel-' + this.uid + '" id="' + this.uid + '" data-toggle="tab">' + this.title + '</a>'
+    li.innerHTML = '<a href="#sidepanel-' + this.uid + '" id="' + this.uid + '" data-toggle="tab">' + this.title + '</a>'
     document.querySelector('#user-tabs .nav-tabs').append(li)
 
     // Label of the panel
     let header = document.createElement('div')
-        header.className = 'panel-header-component settings-header'
-        header.innerHTML = '<div class="panel-header-component-main">' + this.icon + '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div></div>'
+    header.className = 'panel-header-component settings-header'
+    header.innerHTML = '<div class="panel-header-component-main">' + this.icon + '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div></div>'
 
     // Container for buttons
     let controls = document.createElement('div')
-        controls.className = 'button-toolbar'
+    controls.className = 'button-toolbar'
 
     // Append buttons to container
     this.elements.forEach(element => controls.append(element.html()))
 
     // Build form group
     let group = document.createElement('div')
-        group.className = 'form-group'
-        group.append(header)
-        group.append(controls)
+    group.className = 'form-group'
+    group.append(header)
+    group.append(controls)
 
     // Section
     let pane = document.createElement('div')
-        pane.id = 'sidepanel-' + this.uid // required by tab toggle, see above
-        pane.className = 'tab-pane'
-        pane.append(group)
+    pane.id = 'sidepanel-' + this.uid // required by tab toggle, see above
+    pane.className = 'tab-pane'
+    pane.append(group)
     return pane
   }
 }
@@ -312,32 +311,32 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
   toHTML () {
     // Header and close button
     let close = document.createElement('a')
-        close.className = 'close-panel'
-        close.onclick = function () {
-          panel.remove()
-        }
+    close.className = 'close-panel'
+    close.onclick = function () {
+      panel.remove()
+    }
 
     let header = document.createElement('div')
-        header.className = 'header'
-        header.innerHTML = this.title
-        header.prepend(close)
+    header.className = 'header'
+    header.innerHTML = this.title
+    header.prepend(close)
 
     // Body
     let body = document.createElement('div')
-        body.className = 'body'
+    body.className = 'body'
 
     // Append buttons to panel
     this.elements.forEach(element => body.append(element.html()))
 
     // Container
     let archivePanel = document.createElement('div')
-        archivePanel.className = 'archive-panel'
-        archivePanel.append(header)
-        archivePanel.append(body)
+    archivePanel.className = 'archive-panel'
+    archivePanel.append(header)
+    archivePanel.append(body)
 
     let panel = document.createElement('div')
-        panel.className = 'panel show'
-        panel.append(archivePanel)
+    panel.className = 'panel show'
+    panel.append(archivePanel)
 
     return panel
   }
@@ -362,13 +361,13 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
   toHTML () {
     let input = this.applyAttributes(document.createElement('input'))
     let label = document.createElement('label')
-        label.htmlFor = input.id
-        label.innerHTML = this.title
+    label.htmlFor = input.id
+    label.innerHTML = this.title
 
     let container = document.createElement('div')
-        container.title = this.description
-        container.className = 'controls-container'
-        container.append(input, label)
+    container.title = this.description
+    container.className = 'controls-container'
+    container.append(input, label)
     return container
   }
 }
@@ -392,10 +391,10 @@ class WMEUIHelperControlButton extends WMEUIHelperControl {
 
   toHTML () {
     let button = document.createElement('button')
-        button.className = 'waze-btn waze-btn-small waze-btn-white'
-        button.innerHTML = this.title
-        button.title = this.description
-        button.onclick = this.callback
+    button.className = 'waze-btn waze-btn-small waze-btn-white'
+    button.innerHTML = this.title
+    button.title = this.description
+    button.onclick = this.callback
     return button
   }
 }
@@ -414,7 +413,7 @@ class WMEUIShortcut {
    * @param {Object} scope
    * @return {WMEUIShortcut}
    */
-  constructor (name, desc, group, title, shortcut, callback, scope= null) {
+  constructor (name, desc, group, title, shortcut, callback, scope = null) {
     this.name = name
     this.desc = desc
     this.group = group || 'default'
@@ -425,7 +424,7 @@ class WMEUIShortcut {
 
     /* Setup translation for shortcut */
     if (shortcut.length > 0) {
-      this.shortcut = {[shortcut]:name}
+      this.shortcut = { [shortcut]: name }
       WMEUIShortcut.addTranslation(this.group, this.title, this.name, this.desc)
     }
 
@@ -448,7 +447,7 @@ class WMEUIShortcut {
    * @param {String} name of the shortcut
    * @param {String} description of the shortcut
    */
-  static addTranslation(group, title, name, description) {
+  static addTranslation (group, title, name, description) {
     if (!I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group]) {
       I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group] = {
         description: title,
