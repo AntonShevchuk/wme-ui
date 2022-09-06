@@ -187,7 +187,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
 
   /**
    * Add HTMLElement to container
-   * @param {HTMLElement} element
+   * @param {WMEUIHelperElement} element
    */
   addElement (element) {
     this.elements.push(element)
