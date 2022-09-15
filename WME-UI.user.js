@@ -1,17 +1,14 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.0.3
+// @version      0.0.4
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
 // @namespace    https://greasyfork.org/users/227648-anton-shevchuk
 // @supportURL   https://github.com/AntonShevchuk/wme-ui/issues
-// @match        https://www.waze.com/editor*
-// @match        https://www.waze.com/*/editor*
-// @match        https://beta.waze.com/editor*
-// @match        https://beta.waze.com/*/editor*
-// @exclude      https://www.waze.com/user/editor*
-// @exclude      https://beta.waze.com/user/editor*
+// @match        https://*.waze.com/editor*
+// @match        https://*.waze.com/*/editor*
+// @exclude      https://*.waze.com/user/editor*
 // @icon         https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://anton.shevchuk.name&size=64
 // @grant        none
 // ==/UserScript==
@@ -28,9 +25,8 @@ let unsafePolicy = {
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
   unsafePolicy = window.trustedTypes.createPolicy('unsafe', {
     createHTML: string => string,
-  });
+  })
 }
-
 
 class WMEUI {
   /**
@@ -43,7 +39,9 @@ class WMEUI {
   }
 
   /**
-   * Apply CSS styles
+   * Inject CSS styles
+   * @param {String} css
+   * @return void
    */
   static addStyle (css) {
     let style = document.createElement('style')
@@ -53,8 +51,10 @@ class WMEUI {
   }
 
   /**
+   * Add translation for I18n object
    * @param {String} uid
    * @param {Object} data
+   * @return void
    */
   static addTranslation (uid, data) {
     if (!data.en) {
@@ -62,6 +62,21 @@ class WMEUI {
     }
     let locale = I18n.currentLocale()
     I18n.translations[locale][uid] = data[locale] || data.en
+  }
+
+  /**
+   * Create and register shortcut
+   * @param {String} name
+   * @param {String} desc
+   * @param {String} group
+   * @param {String} title
+   * @param {String} shortcut
+   * @param {Function} callback
+   * @param {Object} scope
+   * @return void
+   */
+  static addShortcut (name, desc, group, title, shortcut, callback, scope = null) {
+    new WMEUIShortcut(name, desc, group, title, shortcut, callback, scope).register()
   }
 }
 
@@ -186,7 +201,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Add HTMLElement to container
+   * Add WMEUIHelperElement to container
    * @param {WMEUIHelperElement} element
    */
   addElement (element) {
@@ -204,7 +219,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Create and add fieldset element
+   * Create and add WMEUIHelperFieldset element
    * For Tab, Panel, Modal
    * @param {String} id
    * @param {String} title
@@ -465,6 +480,9 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
   }
 }
 
+/**
+ * Just paragraph with text
+ */
 class WMEUIHelperText extends WMEUIHelperElement {
   toHTML () {
     let p = document.createElement('p')
@@ -473,6 +491,9 @@ class WMEUIHelperText extends WMEUIHelperElement {
   }
 }
 
+/**
+ * Base class for controls
+ */
 class WMEUIHelperControl extends WMEUIHelperElement {
   constructor (uid, id, title, description, attributes = {}) {
     super(uid, id, title, description, attributes)
@@ -480,6 +501,9 @@ class WMEUIHelperControl extends WMEUIHelperElement {
   }
 }
 
+/**
+ * Input with label inside the div
+ */
 class WMEUIHelperControlInput extends WMEUIHelperControl {
   toHTML () {
     let input = this.applyAttributes(document.createElement('input'))
@@ -495,6 +519,9 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
   }
 }
 
+/**
+ * Button with shortcut if neeeded
+ */
 class WMEUIHelperControlButton extends WMEUIHelperControl {
   constructor (uid, id, title, description, callback, shortcut = null) {
     super(uid, id, title, description)
@@ -505,10 +532,10 @@ class WMEUIHelperControlButton extends WMEUIHelperControl {
         this.uid + '-' + this.id,
         this.description,
         this.uid,
-        this.uid,
+        title,
         shortcut,
         this.callback
-      )
+      ).register()
     }
   }
 
@@ -539,18 +566,54 @@ class WMEUIShortcut {
   constructor (name, desc, group, title, shortcut, callback, scope = null) {
     this.name = name
     this.desc = desc
-    this.group = group || 'default'
+    this.group = WMEUI.normalize(group) || 'default'
     this.title = title
-    this.shortcut = {}
+    this.shortcut = null
     this.callback = callback
     this.scope = ('object' === typeof scope) ? scope : null
 
-    /* Setup translation for shortcut */
-    if (shortcut.length > 0) {
+    /* Setup shortcut */
+    if (shortcut && shortcut.length > 0) {
       this.shortcut = { [shortcut]: name }
-      WMEUIShortcut.addTranslation(this.group, this.title, this.name, this.desc)
     }
+  }
 
+  /**
+   * @param {String} group name
+   * @param {String} title of the shortcut section
+   */
+  static setGroupTitle (group, title) {
+    group = WMEUI.normalize(group)
+
+    if (!I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group]) {
+      I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group] = {
+        description: title,
+        members: {}
+      }
+    } else {
+      I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group].description = title
+    }
+  }
+
+  /**
+   * Add translation for shortcut
+   */
+  addTranslation () {
+    if (!I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[this.group]) {
+      I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[this.group] = {
+        description: this.title,
+        members: {
+          [this.name]: this.desc
+        }
+      }
+    }
+    I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[this.group].members[this.name] = this.desc
+  }
+
+  /**
+   * Register group/action/event/shortcut
+   */
+  register () {
     /* Try to initialize new group */
     this.addGroup()
 
@@ -562,24 +625,6 @@ class WMEUIShortcut {
 
     /* Finally, register the shortcut */
     this.registerShortcut()
-  }
-
-  /**
-   * @param {String} group name
-   * @param {String} title of the shortcut section
-   * @param {String} name of the shortcut
-   * @param {String} description of the shortcut
-   */
-  static addTranslation (group, title, name, description) {
-    if (!I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group]) {
-      I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group] = {
-        description: title,
-        members: {
-          [name]: description
-        }
-      }
-    }
-    I18n.translations[I18n.currentLocale()].keyboard_shortcuts.groups[group].members[name] = description
   }
 
   /**
@@ -646,6 +691,10 @@ class WMEUIShortcut {
    * @private
    */
   registerShortcut () {
-    W.accelerators._registerShortcuts(this.shortcut)
+    if (this.shortcut) {
+      /* Setup translation for shortcut */
+      this.addTranslation()
+      W.accelerators._registerShortcuts(this.shortcut)
+    }
   }
 }

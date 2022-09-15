@@ -1,6 +1,50 @@
 # WME UI
 UI Library for Waze Map Editor Greasy Fork scripts
 
+## Methods
+
+### WMEUI
+* `WMEUI.addTranslation(name, translation)` – add translation to the `I180n` object, to call use syntax like this `I180n.t(name).element`
+* `WMEUI.addStyle(css)` – inject CSS to the page
+* `WMEUI.addShortcut (name, desc, group, title, shortcut, callback, scope = null)` - create shortcut
+
+### WMEUIHelper
+
+* `createPanel (title, description = null, attributes = {})` – create a panel for the sidebar container
+* `createTab (title, description = null, attributes = {})` – create a tab for the sidebar container
+* `createModal (title, description = null)` – create a modal window container
+* `createFieldset (title, description = null)` – create a field container
+
+### WMEUIHelperContainer
+A parent class for all containers
+
+* `addElement (element)` - add `WMEUIHelperElement` to a container
+* `addText (id, text)` - add `WMEUIHelperText` to a container
+* `addFieldset (id, title, description)` - add `WMEUIHelperFieldset` to a container
+* `addInput (id, title, description, callback, value = '')` - add `WMEUIHelperControlInput` with `type=text` to a container
+* `addCheckbox (id, title, description, callback, checked = false)` - add `WMEUIHelperControlInput` with `type=checkbox` to a container
+* `addRadio (id, title, description, callback, value, checked = false)` - add `WMEUIHelperControlInput` with `type=radio` to a container
+* `addRange (id, title, description, callback, min, max, value, step = 10)` - add `WMEUIHelperControlInput` with `type=range` to a container
+* `addButton (id, title, description, callback, shortcut = null)` - add `WMEUIHelperControlButton` to a container
+* `addButtons (buttons)` - add set of the `WMEUIHelperControlButton` to a container
+
+### WMEUIHelperPanel
+A container for the sidebar panel 
+
+### WMEUIHelperTab
+A container for the sidebar tab
+
+### WMEUIHelperModal
+A container for modal window
+
+### WMEUIHelperFieldset
+A container for field set HTML element
+
+### WMEUIShortcut
+Create shortcut for callback function
+
+* `new WMEUIShortcut(name, description, group, title, shortcut, callback, scope = null)` - create shortcut
+
 ## Examples
 
 ```javascript
