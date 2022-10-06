@@ -473,7 +473,7 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     archivePanel.append(body)
 
     let panel = document.createElement('div')
-    panel.className = 'panel show'
+    panel.className = 'panel panel--to-be-deprecated show'
     panel.append(archivePanel)
 
     return panel
