@@ -256,15 +256,21 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
-   * @param {String} value
+   * @param {Integer} value
+   * @param {Integer} min
+   * @param {Integer} max
+   * @param {Integer} step
    */
-  addNumber (id, title, description, callback, value = '') {
+  addNumber (id, title, description, callback, value = '', min, max, step = 10) {
     return this.addElement(
       new WMEUIHelperControlInput(this.uid, id, title, description, {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'number',
         'value': value,
+        'min': min,
+        'max': max,
+        'step': step,
       })
     )
   }
@@ -317,20 +323,20 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
+   * @param {Integer} value
    * @param {Integer} min
    * @param {Integer} max
-   * @param {Integer} value
    * @param {Integer} step
    */
-  addRange (id, title, description, callback, min, max, value, step = 10) {
+  addRange (id, title, description, callback, value, min, max, step = 10) {
     return this.addElement(
       new WMEUIHelperControlInput(this.uid, id, title, description, {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'range',
+        'value': value,
         'min': min,
         'max': max,
-        'value': value,
         'step': step,
       })
     )
