@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.0.6
+// @version      0.0.7
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -230,7 +230,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Create checkbox
+   * Create text input
    * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} title
@@ -244,6 +244,26 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'text',
+        'value': value,
+      })
+    )
+  }
+
+  /**
+   * Create number input
+   * For Tab, Panel, Modal, or Fieldset
+   * @param {String} id
+   * @param {String} title
+   * @param {String} description
+   * @param {Function} callback
+   * @param {String} value
+   */
+  addNumber (id, title, description, callback, value = '') {
+    return this.addElement(
+      new WMEUIHelperControlInput(this.uid, id, title, description, {
+        'id': this.uid + '-' + id,
+        'onchange': callback,
+        'type': 'number',
         'value': value,
       })
     )
