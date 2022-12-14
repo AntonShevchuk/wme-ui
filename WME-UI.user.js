@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.0.7
+// @version      0.1.0
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -124,7 +124,6 @@ class WMEUIHelper {
    * Create a modal window
    * @param {String} title
    * @param {String} description
-   * @param {Object} attributes
    * @return {WMEUIHelperModal}
    */
   createModal (title, description = null) {
@@ -135,7 +134,6 @@ class WMEUIHelper {
    * Create a field set
    * @param {String} title
    * @param {String} description
-   * @param {Object} attributes
    * @return {WMEUIHelperFieldset}
    */
   createFieldset (title, description = null) {
@@ -256,10 +254,10 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
-   * @param {Integer} value
-   * @param {Integer} min
-   * @param {Integer} max
-   * @param {Integer} step
+   * @param {Number} value
+   * @param {Number} min
+   * @param {Number} max
+   * @param {Number} step
    */
   addNumber (id, title, description, callback, value = '', min, max, step = 10) {
     return this.addElement(
@@ -282,7 +280,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
-   * @param {Bool} checked
+   * @param {Boolean} checked
    */
   addCheckbox (id, title, description, callback, checked = false) {
     return this.addElement(
@@ -303,7 +301,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} description
    * @param {Function} callback
    * @param {String} value
-   * @param {Bool} checked
+   * @param {Boolean} checked
    */
   addRadio (id, title, description, callback, value, checked = false) {
     return this.addElement(
@@ -323,10 +321,10 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
-   * @param {Integer} value
-   * @param {Integer} min
-   * @param {Integer} max
-   * @param {Integer} step
+   * @param {Number} value
+   * @param {Number} min
+   * @param {Number} max
+   * @param {Number} step
    */
   addRange (id, title, description, callback, value, min, max, step = 10) {
     return this.addElement(
@@ -418,22 +416,16 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     this.icon = attributes.icon ? attributes.icon : ''
   }
 
-  container () {
-    return document.querySelector('.tab-content')
-  }
+  async inject () {
+    const { tabLabel, tabPane } = W.userscripts.registerSidebarTab(this.uid)
 
-  inject () {
-    this.container().append(this.html())
+    tabLabel.innerText = this.title
+    tabLabel.title = this.title
+
+    tabPane.append(this.html())
   }
 
   toHTML () {
-    // Create tab toggler
-    let li = document.createElement('li')
-    li.innerHTML = unsafePolicy.createHTML(
-      '<a href="#sidepanel-' + this.uid + '" id="' + this.uid + '" data-toggle="tab">' + this.title + '</a>'
-    )
-    document.querySelector('#user-tabs .nav-tabs').append(li)
-
     // Label of the panel
     let header = document.createElement('div')
     header.className = 'panel-header-component settings-header'
@@ -454,12 +446,7 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     group.append(header)
     group.append(controls)
 
-    // Section
-    let pane = document.createElement('div')
-    pane.id = 'sidepanel-' + this.uid // required by tab toggle, see above
-    pane.className = 'tab-pane'
-    pane.append(group)
-    return pane
+    return group
   }
 }
 
