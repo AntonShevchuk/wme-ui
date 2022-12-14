@@ -16,7 +16,7 @@
 /* jshint esversion: 8 */
 /* global W, I18n */
 
-// WARNING: this is unsafe!
+/// WARNING: this is unsafe!
 let unsafePolicy = {
   createHTML: string => string
 }
@@ -300,13 +300,15 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
+   * @param {String} name
    * @param {String} value
    * @param {Boolean} checked
    */
-  addRadio (id, title, description, callback, value, checked = false) {
+  addRadio (id, title, description, callback, name, value, checked = false) {
     return this.addElement(
       new WMEUIHelperControlInput(this.uid, id, title, description, {
-        'id': this.uid + '-' + id + '-' + value,
+        'id': this.uid + '-' + id,
+        'name': name,
         'onclick': callback,
         'type': 'radio',
         'value': value,
@@ -510,7 +512,9 @@ class WMEUIHelperText extends WMEUIHelperElement {
 class WMEUIHelperControl extends WMEUIHelperElement {
   constructor (uid, id, title, description, attributes = {}) {
     super(uid, id, title, description, attributes)
-    this.attributes.name = this.id
+    if (!attributes.name) {
+      this.attributes.name = this.id
+    }
   }
 }
 
@@ -520,6 +524,7 @@ class WMEUIHelperControl extends WMEUIHelperElement {
 class WMEUIHelperControlInput extends WMEUIHelperControl {
   toHTML () {
     let input = this.applyAttributes(document.createElement('input'))
+
     let label = document.createElement('label')
     label.htmlFor = input.id
     label.innerHTML = unsafePolicy.createHTML(this.title)
