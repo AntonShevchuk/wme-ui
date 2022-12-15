@@ -179,6 +179,7 @@ class WMEUIHelperElement {
   }
 
   /**
+   * Build and return HTML elements for injection
    * @return {HTMLElement}
    */
   toHTML () {
@@ -201,9 +202,23 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
    * Add WMEUIHelperElement to container
    * @param {WMEUIHelperElement} element
+   * @return {WMEUIHelperElement} element
    */
   addElement (element) {
     this.elements.push(element)
+    return element
+  }
+
+  /**
+   * Create and add WMEUIHelperText element
+   * For Tab, Panel, Modal, or Fieldset
+   * @param {String} id
+   * @param {String} innerHTML
+   * @param {Object} attributes
+   * @return {WMEUIHelperElement} element
+   */
+  addDiv (id, innerHTML = null, attributes = {}) {
+    return this.addElement(new WMEUIHelperDiv(this.uid, id, innerHTML, null, attributes))
   }
 
   /**
@@ -211,6 +226,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} text
+   * @return {WMEUIHelperElement} element
    */
   addText (id, text) {
     return this.addElement(new WMEUIHelperText(this.uid, id, text))
@@ -222,6 +238,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} id
    * @param {String} title
    * @param {String} description
+   * @return {WMEUIHelperElement} element
    */
   addFieldset (id, title, description) {
     return this.addElement(new WMEUIHelperFieldset(this.uid, id, title, description))
@@ -235,6 +252,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} description
    * @param {Function} callback
    * @param {String} value
+   * @return {WMEUIHelperElement} element
    */
   addInput (id, title, description, callback, value = '') {
     return this.addElement(
@@ -258,6 +276,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {Number} min
    * @param {Number} max
    * @param {Number} step
+   * @return {WMEUIHelperElement} element
    */
   addNumber (id, title, description, callback, value = '', min, max, step = 10) {
     return this.addElement(
@@ -281,6 +300,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} description
    * @param {Function} callback
    * @param {Boolean} checked
+   * @return {WMEUIHelperElement} element
    */
   addCheckbox (id, title, description, callback, checked = false) {
     return this.addElement(
@@ -303,6 +323,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} name
    * @param {String} value
    * @param {Boolean} checked
+   * @return {WMEUIHelperElement} element
    */
   addRadio (id, title, description, callback, name, value, checked = false) {
     return this.addElement(
@@ -327,6 +348,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {Number} min
    * @param {Number} max
    * @param {Number} step
+   * @return {WMEUIHelperElement} element
    */
   addRange (id, title, description, callback, value, min, max, step = 10) {
     return this.addElement(
@@ -350,6 +372,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} description
    * @param {Function} callback
    * @param {String} shortcut
+   * @return {WMEUIHelperElement} element
    */
   addButton (id, title, description, callback, shortcut = null) {
     return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, shortcut))
@@ -492,6 +515,21 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     panel.append(archivePanel)
 
     return panel
+  }
+}
+
+/**
+ * Just div, can be with text
+ */
+class WMEUIHelperDiv extends WMEUIHelperElement {
+  toHTML () {
+    let div = document.createElement('div')
+    div.id = this.uid + '-' + this.id
+    if (this.title) {
+      div.innerHTML = this.title
+    }
+    this.applyAttributes(div)
+    return div
   }
 }
 
