@@ -402,6 +402,12 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperPanel extends WMEUIHelperContainer {
+  container () {
+    return document.getElementById('edit-panel')
+  }
+  inject () {
+    this.container().append(this.html())
+  }
   toHTML () {
     // Label of the panel
     let label = document.createElement('label')
@@ -463,10 +469,12 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperModal extends WMEUIHelperContainer {
-  inject () {
-    document.getElementById('panel-container').append(this.html())
+  container () {
+    return document.getElementById('panel-container')
   }
-
+  inject () {
+    this.container().append(this.html())
+  }
   toHTML () {
     // Header and close button
     let close = document.createElement('a')
