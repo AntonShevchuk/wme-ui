@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.1.0
+// @version      0.2.0
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -16,7 +16,7 @@
 /* jshint esversion: 8 */
 /* global W, I18n */
 
-/// WARNING: this is unsafe!
+// WARNING: this is unsafe!
 let unsafePolicy = {
   createHTML: string => string
 }
@@ -101,43 +101,41 @@ class WMEUIHelper {
   /**
    * Create a panel for the sidebar
    * @param {String} title
-   * @param {String} description
    * @param {Object} attributes
    * @return {WMEUIHelperPanel}
    */
-  createPanel (title, description = null, attributes = {}) {
-    return new WMEUIHelperPanel(this.uid, this.generateId(), title, description, attributes)
+  createPanel (title, attributes = {}) {
+    return new WMEUIHelperPanel(this.uid, this.generateId(), title, attributes)
   }
 
   /**
    * Create a tab for the sidebar
    * @param {String} title
-   * @param {String} description
    * @param {Object} attributes
    * @return {WMEUIHelperTab}
    */
-  createTab (title, description = null, attributes = {}) {
-    return new WMEUIHelperTab(this.uid, this.generateId(), title, description, attributes)
+  createTab (title, attributes = {}) {
+    return new WMEUIHelperTab(this.uid, this.generateId(), title, attributes)
   }
 
   /**
    * Create a modal window
    * @param {String} title
-   * @param {String} description
+   * @param {Object} attributes
    * @return {WMEUIHelperModal}
    */
-  createModal (title, description = null) {
-    return new WMEUIHelperModal(this.uid, this.generateId(), title, description)
+  createModal (title, attributes = {}) {
+    return new WMEUIHelperModal(this.uid, this.generateId(), title, attributes)
   }
 
   /**
    * Create a field set
    * @param {String} title
-   * @param {String} description
+   * @param {Object} attributes
    * @return {WMEUIHelperFieldset}
    */
-  createFieldset (title, description = null) {
-    return new WMEUIHelperFieldset(this.uid, this.generateId(), title, description)
+  createFieldset (title, attributes = {}) {
+    return new WMEUIHelperFieldset(this.uid, this.generateId(), title, attributes)
   }
 }
 
@@ -145,13 +143,26 @@ class WMEUIHelper {
  * Basic for all UI elements
  */
 class WMEUIHelperElement {
-  constructor (uid, id, title, description = null, attributes = {}) {
+  constructor (uid, id, title = null, attributes = {}) {
     this.uid = uid
     this.id = id
     this.title = title
-    this.description = description
+    // HTML attributes
     this.attributes = attributes
-    this.domElement = null
+    // DOM element
+    this.element = null
+    // Children
+    this.elements = []
+  }
+
+  /**
+   * Add WMEUIHelperElement to container
+   * @param {WMEUIHelperElement} element
+   * @return {WMEUIHelperElement} element
+   */
+  addElement (element) {
+    this.elements.push(element)
+    return element
   }
 
   /**
@@ -171,11 +182,12 @@ class WMEUIHelperElement {
    * @return {HTMLElement}
    */
   html () {
-    if (!this.domElement) {
-      this.domElement = this.toHTML()
-      this.domElement.className += ' ' + this.uid + ' ' + this.uid + '-' + this.id
+    if (!this.element) {
+      this.element = this.toHTML()
+      this.element = this.applyAttributes(this.element)
+      this.element.className += ' ' + this.uid + ' ' + this.uid + '-' + this.id
     }
-    return this.domElement
+    return this.element
   }
 
   /**
@@ -191,39 +203,19 @@ class WMEUIHelperElement {
  * Basic for all UI containers
  */
 class WMEUIHelperContainer extends WMEUIHelperElement {
-  constructor (uid, id, title, description = null, attributes = {}) {
-    super(uid, id, title, description, attributes)
-    this.elements = []
-    if (description) {
-      this.addText('description', description)
-    }
-  }
-
   /**
-   * Add WMEUIHelperElement to container
-   * @param {WMEUIHelperElement} element
-   * @return {WMEUIHelperElement} element
-   */
-  addElement (element) {
-    this.elements.push(element)
-    return element
-  }
-
-  /**
-   * Create and add WMEUIHelperText element
-   * For Tab, Panel, Modal, or Fieldset
+   * Create and add WMEUIHelperDiv element
    * @param {String} id
    * @param {String} innerHTML
    * @param {Object} attributes
    * @return {WMEUIHelperElement} element
    */
   addDiv (id, innerHTML = null, attributes = {}) {
-    return this.addElement(new WMEUIHelperDiv(this.uid, id, innerHTML, null, attributes))
+    return this.addElement(new WMEUIHelperDiv(this.uid, id, innerHTML, attributes))
   }
 
   /**
    * Create and add WMEUIHelperText element
-   * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} text
    * @return {WMEUIHelperElement} element
@@ -246,17 +238,15 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
 
   /**
    * Create text input
-   * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @param {Function} callback
    * @param {String} value
    * @return {WMEUIHelperElement} element
    */
-  addInput (id, title, description, callback, value = '') {
+  addInput (id, title, callback, value = '') {
     return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, description, {
+      new WMEUIHelperControlInput(this.uid, id, title, {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'text',
@@ -267,10 +257,8 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
 
   /**
    * Create number input
-   * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @param {Function} callback
    * @param {Number} value
    * @param {Number} min
@@ -278,9 +266,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {Number} step
    * @return {WMEUIHelperElement} element
    */
-  addNumber (id, title, description, callback, value = '', min, max, step = 10) {
+  addNumber (id, title, callback, value = 0, min, max, step = 10) {
     return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, description, {
+      new WMEUIHelperControlInput(this.uid, id, title, {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'number',
@@ -297,14 +285,13 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * For Tab, Panel, Modal, or Fieldset
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @param {Function} callback
    * @param {Boolean} checked
    * @return {WMEUIHelperElement} element
    */
-  addCheckbox (id, title, description, callback, checked = false) {
+  addCheckbox (id, title, callback, checked = false) {
     return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, description, {
+      new WMEUIHelperControlInput(this.uid, id, title, {
         'id': this.uid + '-' + id,
         'onclick': callback,
         'type': 'checkbox',
@@ -318,16 +305,15 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * Create radiobutton
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @param {Function} callback
    * @param {String} name
    * @param {String} value
    * @param {Boolean} checked
    * @return {WMEUIHelperElement} element
    */
-  addRadio (id, title, description, callback, name, value, checked = false) {
+  addRadio (id, title, callback, name, value, checked = false) {
     return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, description, {
+      new WMEUIHelperControlInput(this.uid, id, title, {
         'id': this.uid + '-' + id,
         'name': name,
         'onclick': callback,
@@ -350,9 +336,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {Number} step
    * @return {WMEUIHelperElement} element
    */
-  addRange (id, title, description, callback, value, min, max, step = 10) {
+  addRange (id, title, callback, value, min, max, step = 10) {
     return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, description, {
+      new WMEUIHelperControlInput(this.uid, id, title, {
         'id': this.uid + '-' + id,
         'onchange': callback,
         'type': 'range',
@@ -410,7 +396,8 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
     this.elements.forEach(element => controls.append(element.html()))
 
     let fieldset = document.createElement('fieldset')
-    fieldset.append(legend, controls)
+    fieldset.append(legend)
+    fieldset.append(controls)
     return fieldset
   }
 }
@@ -436,9 +423,9 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperTab extends WMEUIHelperContainer {
-  constructor (uid, id, title, description = null, attributes = {}) {
-    super(uid, id, title, description, attributes)
-    this.icon = attributes.icon ? attributes.icon : ''
+  constructor (uid, id, title, attributes = {}) {
+    super(uid, id, title, attributes)
+    this.icon = attributes.icon
   }
 
   async inject () {
@@ -455,7 +442,8 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     let header = document.createElement('div')
     header.className = 'panel-header-component settings-header'
     header.innerHTML = unsafePolicy.createHTML(
-      this.icon + '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div>'
+      (this.icon ? '<i class="w-icon panel-header-component-icon w-icon-' + this.icon + '"></i>' : '') +
+      '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div>'
     )
 
     // Container for buttons
@@ -476,12 +464,8 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperModal extends WMEUIHelperContainer {
-  container () {
-    return document.getElementById('panel-container')
-  }
-
   inject () {
-    this.container().append(this.html())
+    document.getElementById('panel-container').append(this.html())
   }
 
   toHTML () {
@@ -528,7 +512,6 @@ class WMEUIHelperDiv extends WMEUIHelperElement {
     if (this.title) {
       div.innerHTML = this.title
     }
-    this.applyAttributes(div)
     return div
   }
 }
@@ -548,8 +531,8 @@ class WMEUIHelperText extends WMEUIHelperElement {
  * Base class for controls
  */
 class WMEUIHelperControl extends WMEUIHelperElement {
-  constructor (uid, id, title, description, attributes = {}) {
-    super(uid, id, title, description, attributes)
+  constructor (uid, id, title, attributes = {}) {
+    super(uid, id, title, attributes)
     if (!attributes.name) {
       this.attributes.name = this.id
     }
@@ -561,7 +544,7 @@ class WMEUIHelperControl extends WMEUIHelperElement {
  */
 class WMEUIHelperControlInput extends WMEUIHelperControl {
   toHTML () {
-    let input = this.applyAttributes(document.createElement('input'))
+    let input = document.createElement('input')
 
     let label = document.createElement('label')
     label.htmlFor = input.id
@@ -570,7 +553,8 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
     let container = document.createElement('div')
     container.title = this.description
     container.className = 'controls-container'
-    container.append(input, label)
+    container.append(input)
+    container.append(label)
     return container
   }
 }
@@ -580,7 +564,8 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
  */
 class WMEUIHelperControlButton extends WMEUIHelperControl {
   constructor (uid, id, title, description, callback, shortcut = null) {
-    super(uid, id, title, description)
+    super(uid, id, title)
+    this.description = description
     this.callback = callback
     if (shortcut) {
       /* name, desc, group, title, shortcut, callback, scope */
