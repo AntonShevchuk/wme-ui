@@ -184,7 +184,6 @@ class WMEUIHelperElement {
   html () {
     if (!this.element) {
       this.element = this.toHTML()
-      this.element = this.applyAttributes(this.element)
       this.element.className += ' ' + this.uid + ' ' + this.uid + '-' + this.id
     }
     return this.element
@@ -328,7 +327,6 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * Create range input
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @param {Function} callback
    * @param {Number} value
    * @param {Number} min
@@ -396,6 +394,7 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
     this.elements.forEach(element => controls.append(element.html()))
 
     let fieldset = document.createElement('fieldset')
+    fieldset = this.applyAttributes(fieldset)
     fieldset.append(legend)
     fieldset.append(controls)
     return fieldset
@@ -508,6 +507,7 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
 class WMEUIHelperDiv extends WMEUIHelperElement {
   toHTML () {
     let div = document.createElement('div')
+    div = this.applyAttributes(div)
     div.id = this.uid + '-' + this.id
     if (this.title) {
       div.innerHTML = this.title
@@ -522,6 +522,7 @@ class WMEUIHelperDiv extends WMEUIHelperElement {
 class WMEUIHelperText extends WMEUIHelperElement {
   toHTML () {
     let p = document.createElement('p')
+    p = this.applyAttributes(p)
     p.innerHTML = unsafePolicy.createHTML(this.title)
     return p
   }
@@ -545,6 +546,7 @@ class WMEUIHelperControl extends WMEUIHelperElement {
 class WMEUIHelperControlInput extends WMEUIHelperControl {
   toHTML () {
     let input = document.createElement('input')
+    input = this.applyAttributes(input)
 
     let label = document.createElement('label')
     label.htmlFor = input.id
