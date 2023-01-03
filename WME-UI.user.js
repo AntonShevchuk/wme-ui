@@ -561,7 +561,6 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
     label.innerHTML = unsafePolicy.createHTML(this.title)
 
     let container = document.createElement('div')
-    container.title = this.description
     container.className = 'controls-container'
     container.append(input)
     container.append(label)
