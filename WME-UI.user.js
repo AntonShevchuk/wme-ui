@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.2.0
+// @version      0.2.1
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -446,10 +446,26 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     // Label of the panel
     let header = document.createElement('div')
     header.className = 'panel-header-component settings-header'
-    header.innerHTML = unsafePolicy.createHTML(
-      (this.icon ? '<i class="w-icon panel-header-component-icon w-icon-' + this.icon + '"></i>' : '') +
+    header.style.alignItems = 'center'
+    header.style.display = 'flex'
+    header.style.gap = '9px'
+    header.style.justifyContent = 'stretch'
+    header.style.padding = '8px'
+    header.style.width = '100%'
+
+    if (this.icon) {
+      let icon = document.createElement('i')
+      icon.className = 'w-icon panel-header-component-icon w-icon-' + this.icon
+      icon.style.fontSize = '24px'
+      header.append(icon)
+    }
+
+    let title = document.createElement('div')
+    title.className = 'feature-id-container'
+    title.innerHTML = unsafePolicy.createHTML(
       '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div>'
     )
+    header.append(title)
 
     // Container for buttons
     let controls = document.createElement('div')
