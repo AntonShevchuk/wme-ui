@@ -203,6 +203,59 @@ class WMEUIHelperElement {
  */
 class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
+   * Create and add button
+   * For Tab Panel Modal Fieldset
+   * @param {String} id
+   * @param {String} title
+   * @param {String} description
+   * @param {Function} callback
+   * @param {String} shortcut
+   * @return {WMEUIHelperElement} element
+   */
+  addButton (id, title, description, callback, shortcut = null) {
+    return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, shortcut))
+  }
+
+  /**
+   * Create buttons
+   * @param {Object} buttons
+   */
+  addButtons (buttons) {
+    for (let btn in buttons) {
+      if (buttons.hasOwnProperty(btn)) {
+        this.addButton(
+          btn,
+          buttons[btn].title,
+          buttons[btn].description,
+          buttons[btn].callback,
+          buttons[btn].shortcut,
+        )
+      }
+    }
+  }
+
+  /**
+   * Create checkbox
+   * For Tab, Panel, Modal, or Fieldset
+   * @param {String} id
+   * @param {String} title
+   * @param {Function} callback
+   * @param {Boolean} checked
+   * @return {WMEUIHelperElement} element
+   */
+  addCheckbox (id, title, callback, checked = false) {
+    return this.addElement(
+      new WMEUIHelperControlInput(this.uid, id, title, {
+        'id': this.uid + '-' + id,
+        'onclick': callback,
+        'type': 'checkbox',
+        'value': 1,
+        'checked': checked,
+      })
+    )
+  }
+
+  /**
    * Create and add WMEUIHelperDiv element
    * @param {String} id
    * @param {String} innerHTML
@@ -214,25 +267,14 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Create and add WMEUIHelperText element
-   * @param {String} id
-   * @param {String} text
-   * @return {WMEUIHelperElement} element
-   */
-  addText (id, text) {
-    return this.addElement(new WMEUIHelperText(this.uid, id, text))
-  }
-
-  /**
    * Create and add WMEUIHelperFieldset element
    * For Tab, Panel, Modal
    * @param {String} id
    * @param {String} title
-   * @param {String} description
    * @return {WMEUIHelperElement} element
    */
-  addFieldset (id, title, description) {
-    return this.addElement(new WMEUIHelperFieldset(this.uid, id, title, description))
+  addFieldset (id, title) {
+    return this.addElement(new WMEUIHelperFieldset(this.uid, id, title))
   }
 
   /**
@@ -275,27 +317,6 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
         'min': min,
         'max': max,
         'step': step,
-      })
-    )
-  }
-
-  /**
-   * Create checkbox
-   * For Tab, Panel, Modal, or Fieldset
-   * @param {String} id
-   * @param {String} title
-   * @param {Function} callback
-   * @param {Boolean} checked
-   * @return {WMEUIHelperElement} element
-   */
-  addCheckbox (id, title, callback, checked = false) {
-    return this.addElement(
-      new WMEUIHelperControlInput(this.uid, id, title, {
-        'id': this.uid + '-' + id,
-        'onclick': callback,
-        'type': 'checkbox',
-        'value': 1,
-        'checked': checked,
       })
     )
   }
@@ -349,35 +370,13 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Create and add button
-   * For Tab Panel Modal Fieldset
+   * Create and add WMEUIHelperText element
    * @param {String} id
-   * @param {String} title
-   * @param {String} description
-   * @param {Function} callback
-   * @param {String} shortcut
+   * @param {String} text
    * @return {WMEUIHelperElement} element
    */
-  addButton (id, title, description, callback, shortcut = null) {
-    return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, shortcut))
-  }
-
-  /**
-   * Create buttons
-   * @param {Object} buttons
-   */
-  addButtons (buttons) {
-    for (let btn in buttons) {
-      if (buttons.hasOwnProperty(btn)) {
-        this.addButton(
-          btn,
-          buttons[btn].title,
-          buttons[btn].description,
-          buttons[btn].callback,
-          buttons[btn].shortcut,
-        )
-      }
-    }
+  addText (id, text) {
+    return this.addElement(new WMEUIHelperText(this.uid, id, text))
   }
 }
 
@@ -405,9 +404,11 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
   container () {
     return document.getElementById('edit-panel')
   }
+
   inject () {
     this.container().append(this.html())
   }
+
   toHTML () {
     // Label of the panel
     let label = document.createElement('label')
@@ -488,9 +489,11 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
   container () {
     return document.getElementById('panel-container')
   }
+
   inject () {
     this.container().append(this.html())
   }
+
   toHTML () {
     // Header and close button
     let close = document.createElement('a')

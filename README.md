@@ -19,12 +19,14 @@ UI Library for Waze Map Editor Greasy Fork scripts
 A parent class for all containers
 
 * `addElement (element)` - add `WMEUIHelperElement` to a container
+* `addDiv (id, innerHTML, attributes)` - add `WMEUIHelperDiv` to a container
 * `addText (id, text)` - add `WMEUIHelperText` to a container
 * `addFieldset (id, title, description)` - add `WMEUIHelperFieldset` to a container
-* `addInput (id, title, description, callback, value = '')` - add `WMEUIHelperControlInput` with `type=text` to a container
-* `addCheckbox (id, title, description, callback, checked = false)` - add `WMEUIHelperControlInput` with `type=checkbox` to a container
-* `addRadio (id, title, description, callback, value, checked = false)` - add `WMEUIHelperControlInput` with `type=radio` to a container
-* `addRange (id, title, description, callback, min, max, value, step = 10)` - add `WMEUIHelperControlInput` with `type=range` to a container
+* `addInput (id, title, callback, value = '')` - add `WMEUIHelperControlInput` with `type=text` to a container
+* `addNumber (id, title, callback, value = 0, min, max, step = 10)` - `WMEUIHelperControlInput` with `type=number` to a container
+* `addCheckbox (id, title, callback, checked = false)` - add `WMEUIHelperControlInput` with `type=checkbox` to a container
+* `addRadio (id, title, callback, name, value, checked = false)` - add `WMEUIHelperControlInput` with `type=radio` to a container
+* `addRange (id, title, callback, value, min, max, step = 10)` - add `WMEUIHelperControlInput` with `type=range` to a container
 * `addButton (id, title, description, callback, shortcut = null)` - add `WMEUIHelperControlButton` to a container
 * `addButtons (buttons)` - add set of the `WMEUIHelperControlButton` to a container
 
