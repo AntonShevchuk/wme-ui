@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.2.1
+// @version      0.2.2
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -534,7 +534,7 @@ class WMEUIHelperDiv extends WMEUIHelperElement {
     div = this.applyAttributes(div)
     div.id = this.uid + '-' + this.id
     if (this.title) {
-      div.innerHTML = this.title
+      div.innerHTML = unsafePolicy.createHTML(this.title)
     }
     return div
   }
