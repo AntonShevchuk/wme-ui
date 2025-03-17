@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.2.6
+// @version      0.2.7
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -419,7 +419,7 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
     controls.className = 'controls'
     // Append buttons to panel
     this.elements.forEach(element => controls.append(element.html()))
-    // Build panel
+    // Build the panel
     let group = document.createElement('div')
     group.className = 'form-group'
     group.append(label)
@@ -504,42 +504,58 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
 
   toHTML () {
     // Header and close button
-    let close = document.createElement('a')
-    close.className = 'close-panel'
+    let close = document.createElement('button')
+    close.className = 'wme-ui-close-panel'
+    close.style.background = '#fff'
+    close.style.border = '1px solid #ececec'
+    close.style.borderRadius = '100%'
+    close.style.cursor = 'pointer'
+    close.style.fontSize = '20px'
+    close.style.height = '20px'
+    close.style.lineHeight = '16px'
+    close.style.position = 'absolute'
+    close.style.right = '14px'
+    close.style.textIndent = '-2px'
+    close.style.top = '14px'
+    close.style.transition = 'all 150ms'
+    close.style.width = '20px'
+    close.style.zIndex = '99'
+    close.innerText = '×'
     close.onclick = function () {
       panel.remove()
     }
 
     let title = document.createElement('h5')
+    title.style.padding = '16px 16px 0'
     title.innerHTML = unsafePolicy.createHTML(this.title)
 
     let header = document.createElement('div')
-    header.className = 'header'
+    header.className = 'wme-ui-header'
     header.style.position = 'relative'
     header.prepend(title)
     header.prepend(close)
 
     // Body
     let body = document.createElement('div')
-    body.className = 'body'
+    body.className = 'wme-ui-body'
 
     // Append buttons to panel
     this.elements.forEach(element => body.append(element.html()))
 
     // Container
-    let archivePanel = document.createElement('div')
-    archivePanel.className = 'archive-panel'
-    archivePanel.append(header)
-    archivePanel.append(body)
+    let container = document.createElement('div')
+    container.className = 'wme-ui-panel-container'
+    container.append(header)
+    container.append(body)
 
+    // Panel
     let panel = document.createElement('div')
-    panel.id = 'wme-ui-panel-container'
     panel.style.width = '320px'
-    panel.style.background = '#ffffff'
+    panel.style.background = '#fff'
     panel.style.margin = '15px'
     panel.style.borderRadius = '5px'
-    panel.className = '' // 'panel panel--to-be-deprecated show'
-    panel.append(archivePanel)
+    panel.className = 'wme-ui-panel'
+    panel.append(container)
 
     return panel
   }
