@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.2.4
+// @version      0.2.5
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -51,7 +51,7 @@ class WMEUI {
   }
 
   /**
-   * Add translation for I18n object
+   * Add translation for the I18n object
    * @param {String} uid
    * @param {Object} data
    * @return void
@@ -483,7 +483,7 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     // Append buttons to container
     this.elements.forEach(element => controls.append(element.html()))
 
-    // Build form group
+    // Build a form group
     let group = document.createElement('div')
     group.className = 'form-group'
     group.append(header)
@@ -495,7 +495,7 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
 
 class WMEUIHelperModal extends WMEUIHelperContainer {
   container () {
-    return document.getElementById('panel-container')
+    return document.getElementById('tippy-container')
   }
 
   inject () {
@@ -532,6 +532,7 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     archivePanel.append(body)
 
     let panel = document.createElement('div')
+    panel.id = 'wme-ui-panel-container'
     panel.className = 'panel panel--to-be-deprecated show'
     panel.append(archivePanel)
 
@@ -555,7 +556,7 @@ class WMEUIHelperDiv extends WMEUIHelperElement {
 }
 
 /**
- * Just paragraph with text
+ * Just a paragraph with text
  */
 class WMEUIHelperText extends WMEUIHelperElement {
   toHTML () {
@@ -599,7 +600,7 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
 }
 
 /**
- * Button with shortcut if neeeded
+ * Button with shortcut if needed
  */
 class WMEUIHelperControlButton extends WMEUIHelperControl {
   constructor (uid, id, title, description, callback, shortcut = null) {
@@ -694,10 +695,10 @@ class WMEUIShortcut {
    * Register group/action/event/shortcut
    */
   register () {
-    /* Try to initialize new group */
+    /* Try to initialize a new group */
     this.addGroup()
 
-    /* Clear existing actions with same name and create new */
+    /* Clear existing actions with the same name and create new */
     this.addAction()
 
     /* Try to register new event */
