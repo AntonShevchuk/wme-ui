@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.2.5
+// @version      0.2.6
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -515,6 +515,7 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
 
     let header = document.createElement('div')
     header.className = 'header'
+    header.style.position = 'relative'
     header.prepend(title)
     header.prepend(close)
 
@@ -533,7 +534,11 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
 
     let panel = document.createElement('div')
     panel.id = 'wme-ui-panel-container'
-    panel.className = 'panel panel--to-be-deprecated show'
+    panel.style.width = '320px'
+    panel.style.background = '#ffffff'
+    panel.style.margin = '15px'
+    panel.style.borderRadius = '5px'
+    panel.className = '' // 'panel panel--to-be-deprecated show'
     panel.append(archivePanel)
 
     return panel
