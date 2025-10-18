@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.3.0
+// @version      0.3.1
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -62,21 +62,6 @@ class WMEUI {
     }
     let locale = I18n.currentLocale()
     I18n.translations[locale][uid] = data[locale] || data.en
-  }
-
-  /**
-   * Create and register shortcut
-   * @param {String} name
-   * @param {String} desc
-   * @param {String} group
-   * @param {String} title
-   * @param {String} shortcut
-   * @param {Function} callback
-   * @param {Object} scope
-   * @return void
-   */
-  static addShortcut (name, desc, group, title, shortcut, callback, scope = null) {
-    new WMEUIShortcut(name, desc, group, title, shortcut, callback, scope).register()
   }
 }
 
@@ -429,14 +414,15 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperTab extends WMEUIHelperContainer {
-  constructor (uid, id, title, attributes = {}) {
+  constructor (sidebar, uid, id, title, attributes = {}) {
     super(uid, id, title, attributes)
+    this.sidebar = sidebar
     this.icon = attributes.icon
     this.image = attributes.image
   }
 
   async inject () {
-    const { tabLabel, tabPane } = W.userscripts.registerSidebarTab(this.uid)
+    const { tabLabel, tabPane } = this.sidebar.registerSidebarTab(this.uid)
 
     tabLabel.innerText = this.title
     tabLabel.title = this.title
