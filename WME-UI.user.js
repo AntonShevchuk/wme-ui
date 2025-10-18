@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.3.2
+// @version      0.3.3
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -414,20 +414,23 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
 }
 
 class WMEUIHelperTab extends WMEUIHelperContainer {
-  constructor (sidebar, uid, id, title, attributes = {}) {
+  constructor (uid, id, title, attributes = {}) {
     super(uid, id, title, attributes)
-    this.sidebar = sidebar
+    this.sidebar = attributes.sidebar
     this.icon = attributes.icon
     this.image = attributes.image
   }
 
   async inject () {
-    const { tabLabel, tabPane } = this.sidebar.registerScriptTab(this.uid)
+    this.sidebar
+      .registerScriptTab(this.uid)
+      .then(({ tabLabel, tabPane }) => {
 
-    tabLabel.innerText = this.title
-    tabLabel.title = this.title
+        tabLabel.innerText = this.title
+        tabLabel.title = this.title
 
-    tabPane.append(this.html())
+        tabPane.append(this.html())
+      })
   }
 
   toHTML () {
