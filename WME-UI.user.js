@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.3.3
+// @version      0.3.4
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -613,21 +613,10 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
  * Button with shortcut if needed
  */
 class WMEUIHelperControlButton extends WMEUIHelperControl {
-  constructor (uid, id, title, description, callback, shortcut = null) {
+  constructor (uid, id, title, description, callback) {
     super(uid, id, title)
     this.description = description
     this.callback = callback
-    if (shortcut) {
-      /* name, desc, group, title, shortcut, callback, scope */
-      new WMEUIShortcut(
-        this.uid + '-' + this.id,
-        this.description,
-        this.uid,
-        title,
-        shortcut,
-        this.callback
-      ).register()
-    }
   }
 
   toHTML () {
