@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.3.4
+// @version      0.4.0
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -194,11 +194,12 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {String} title
    * @param {String} description
    * @param {Function} callback
-   * @param {String} shortcut
    * @return {WMEUIHelperElement} element
    */
-  addButton (id, title, description, callback, shortcut = null) {
-    return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, shortcut))
+  addButton (id, title, description, callback) {
+    return this.addElement(
+      new WMEUIHelperControlButton(this.uid, id, title, description, callback)
+    )
   }
 
   /**
@@ -206,14 +207,13 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @param {Object} buttons
    */
   addButtons (buttons) {
-    for (let btn in buttons) {
-      if (buttons.hasOwnProperty(btn)) {
+    for (let key in buttons) {
+      if (buttons.hasOwnProperty(key)) {
         this.addButton(
-          btn,
-          buttons[btn].title,
-          buttons[btn].description,
-          buttons[btn].callback,
-          buttons[btn].shortcut,
+          key,
+          buttons[key].title,
+          buttons[key].description,
+          buttons[key].callback,
         )
       }
     }
@@ -248,7 +248,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @return {WMEUIHelperElement} element
    */
   addDiv (id, innerHTML = null, attributes = {}) {
-    return this.addElement(new WMEUIHelperDiv(this.uid, id, innerHTML, attributes))
+    return this.addElement(
+      new WMEUIHelperDiv(this.uid, id, innerHTML, attributes)
+    )
   }
 
   /**
@@ -259,7 +261,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    * @return {WMEUIHelperElement} element
    */
   addFieldset (id, title) {
-    return this.addElement(new WMEUIHelperFieldset(this.uid, id, title))
+    return this.addElement(
+      new WMEUIHelperFieldset(this.uid, id, title)
+    )
   }
 
   /**
@@ -396,8 +400,8 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
 
   toHTML () {
     // Label of the panel
-    let label = document.createElement('label')
-    label.className = 'control-label'
+    let label = document.createElement('wz-label')
+    label.htmlFor = ''
     label.innerHTML = unsafePolicy.createHTML(this.title)
     // Container for buttons
     let controls = document.createElement('div')
