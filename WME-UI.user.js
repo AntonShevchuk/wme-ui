@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.4.0
+// @version      0.4.1
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -535,11 +535,17 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     // Append buttons to panel
     this.elements.forEach(element => body.append(element.html()))
 
+    // Footer
+    let footer = document.createElement('div')
+    footer.className = 'wme-ui-footer'
+    footer.style.padding = '4px 0'
+
     // Container
     let container = document.createElement('div')
     container.className = 'wme-ui-panel-container'
     container.append(header)
     container.append(body)
+    container.append(footer)
 
     // Panel
     let panel = document.createElement('div')
