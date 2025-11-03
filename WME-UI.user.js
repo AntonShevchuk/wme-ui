@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.4.1
+// @version      0.4.2
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -531,6 +531,8 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     // Body
     let body = document.createElement('div')
     body.className = 'wme-ui-body'
+    body.style.maxHeight = '70vh'
+    body.style.overflow = 'auto'
 
     // Append buttons to panel
     this.elements.forEach(element => body.append(element.html()))
