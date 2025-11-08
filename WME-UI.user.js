@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 /* jshint esversion: 8 */
-/* global W, I18n */
+/* global I18n */
 
 // WARNING: this is unsafe!
 let unsafePolicy = {
