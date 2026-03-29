@@ -2,12 +2,12 @@ import { WMEUIHelperContainer } from './container'
 import { unsafePolicy } from './unsafe-policy'
 
 class WMEUIHelperPanel extends WMEUIHelperContainer {
-  container (): HTMLElement {
+  container (): HTMLElement | null {
     return document.getElementById('edit-panel')
   }
 
   inject (): void {
-    this.container().append(this.html())
+    this.container()?.append(this.html())
   }
 
   toHTML (): HTMLElement {

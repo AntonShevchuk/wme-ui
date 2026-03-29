@@ -2,15 +2,23 @@ import { WMEUIHelperContainer } from './container'
 import { unsafePolicy } from './unsafe-policy'
 
 class WMEUIHelperModal extends WMEUIHelperContainer {
-  container (): HTMLElement {
+  container (): HTMLElement | null {
     return document.getElementById('tippy-container')
   }
 
   inject (): void {
-    this.container().append(this.html())
+    this.container()?.append(this.html())
   }
 
   toHTML (): HTMLElement {
+    // Panel (declared first so close button can reference it)
+    let panel = document.createElement('div')
+    panel.style.width = '320px'
+    panel.style.background = '#fff'
+    panel.style.margin = '15px'
+    panel.style.borderRadius = '5px'
+    panel.className = 'wme-ui-panel'
+
     // Header and close button
     let close = document.createElement('button')
     close.className = 'wme-ui-close-panel'
@@ -63,13 +71,6 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
     container.append(body)
     container.append(footer)
 
-    // Panel
-    let panel = document.createElement('div')
-    panel.style.width = '320px'
-    panel.style.background = '#fff'
-    panel.style.margin = '15px'
-    panel.style.borderRadius = '5px'
-    panel.className = 'wme-ui-panel'
     panel.append(container)
 
     return panel

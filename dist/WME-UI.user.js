@@ -270,7 +270,7 @@
             return document.getElementById('edit-panel');
         }
         inject() {
-            this.container().append(this.html());
+            this.container()?.append(this.html());
         }
         toHTML() {
             let label = document.createElement('wz-label');
@@ -344,9 +344,16 @@
             return document.getElementById('tippy-container');
         }
         inject() {
-            this.container().append(this.html());
+            this.container()?.append(this.html());
         }
         toHTML() {
+            // Panel (declared first so close button can reference it)
+            let panel = document.createElement('div');
+            panel.style.width = '320px';
+            panel.style.background = '#fff';
+            panel.style.margin = '15px';
+            panel.style.borderRadius = '5px';
+            panel.className = 'wme-ui-panel';
             // Header and close button
             let close = document.createElement('button');
             close.className = 'wme-ui-close-panel';
@@ -392,13 +399,6 @@
             container.append(header);
             container.append(body);
             container.append(footer);
-            // Panel
-            let panel = document.createElement('div');
-            panel.style.width = '320px';
-            panel.style.background = '#fff';
-            panel.style.margin = '15px';
-            panel.style.borderRadius = '5px';
-            panel.className = 'wme-ui-panel';
             panel.append(container);
             return panel;
         }
