@@ -141,6 +141,27 @@ Create shortcut for callback function
 })();
 ```
 
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build the userscript
+npm run build
+
+# Watch for changes and rebuild
+npm run watch
+
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+Source is written in TypeScript under `src/`, built with Rollup into `dist/WME-UI.user.js`.
+
 ## Links
 
 Author homepage: https://anton.shevchuk.name/  
