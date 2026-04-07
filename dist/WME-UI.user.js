@@ -68,13 +68,21 @@
             return element;
         }
         /**
+         * Remove WMEUIHelperElement from container
+         */
+        removeElement(element) {
+            const index = this.elements.indexOf(element);
+            if (index !== -1) {
+                this.elements.splice(index, 1);
+                element.html().remove();
+            }
+        }
+        /**
          * Apply attributes to HTML element
          */
         applyAttributes(element) {
-            for (let attr in this.attributes) {
-                if (this.attributes.hasOwnProperty(attr)) {
-                    element[attr] = this.attributes[attr];
-                }
+            for (const [attr, value] of Object.entries(this.attributes)) {
+                element[attr] = value;
             }
             return element;
         }
@@ -146,8 +154,8 @@
     class WMEUIHelperDiv extends WMEUIHelperElement {
         toHTML() {
             let div = document.createElement('div');
-            div = this.applyAttributes(div);
             div.id = this.uid + '-' + this.id;
+            div = this.applyAttributes(div);
             if (this.title) {
                 div.innerHTML = unsafePolicy.createHTML(this.title);
             }
@@ -326,7 +334,7 @@
             }
             let title = document.createElement('div');
             title.className = 'feature-id-container';
-            title.innerHTML = unsafePolicy.createHTML('<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div>');
+            title.innerHTML = unsafePolicy.createHTML('<wz-overline>' + this.title + '</wz-overline>');
             header.append(title);
             let controls = document.createElement('div');
             controls.className = 'button-toolbar';

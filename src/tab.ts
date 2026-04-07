@@ -52,7 +52,7 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     let title = document.createElement('div')
     title.className = 'feature-id-container'
     title.innerHTML = unsafePolicy.createHTML(
-      '<div class="feature-id-container"><wz-overline>' + this.title + '</wz-overline></div>'
+      '<wz-overline>' + this.title + '</wz-overline>'
     )
     header.append(title)
 

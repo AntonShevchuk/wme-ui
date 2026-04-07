@@ -24,13 +24,22 @@ class WMEUIHelperElement {
   }
 
   /**
+   * Remove WMEUIHelperElement from container
+   */
+  removeElement (element: WMEUIHelperElement): void {
+    const index = this.elements.indexOf(element)
+    if (index !== -1) {
+      this.elements.splice(index, 1)
+      element.html().remove()
+    }
+  }
+
+  /**
    * Apply attributes to HTML element
    */
   applyAttributes (element: HTMLElement): HTMLElement {
-    for (let attr in this.attributes) {
-      if (this.attributes.hasOwnProperty(attr)) {
-        (element as any)[attr] = this.attributes[attr]
-      }
+    for (const [attr, value] of Object.entries(this.attributes)) {
+      (element as any)[attr] = value
     }
     return element
   }

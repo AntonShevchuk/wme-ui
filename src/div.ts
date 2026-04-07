@@ -4,8 +4,8 @@ import { unsafePolicy } from './unsafe-policy'
 class WMEUIHelperDiv extends WMEUIHelperElement {
   toHTML (): HTMLElement {
     let div = document.createElement('div')
-    div = this.applyAttributes(div) as HTMLDivElement
     div.id = this.uid + '-' + this.id
+    div = this.applyAttributes(div) as HTMLDivElement
     if (this.title) {
       div.innerHTML = unsafePolicy.createHTML(this.title)
     }
