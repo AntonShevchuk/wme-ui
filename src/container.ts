@@ -32,6 +32,23 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
+   * Create checkboxes from an object
+   * Each key becomes a checkbox with title, callback, and checked state
+   */
+  addCheckboxes (checkboxes: Record<string, any>): void {
+    for (const key in checkboxes) {
+      if (checkboxes.hasOwnProperty(key)) {
+        this.addCheckbox(
+          key,
+          checkboxes[key].title,
+          checkboxes[key].callback,
+          checkboxes[key].checked || false,
+        )
+      }
+    }
+  }
+
+  /**
    * Create and add WMEUIHelperControlInput element
    */
   addCheckbox (id: string, title: string, callback: Function, checked: boolean = false): WMEUIHelperElement {
