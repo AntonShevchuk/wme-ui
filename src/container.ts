@@ -3,7 +3,7 @@ import { WMEUIHelperControlButton, WMEUIHelperControlInput } from './controls'
 import { WMEUIHelperDiv } from './div'
 import { WMEUIHelperText } from './text'
 
-type FieldsetConstructor = new (uid: string, id: string, title: string) => WMEUIHelperElement
+type FieldsetConstructor = new (uid: string, id: string, title: string, attributes?: Record<string, any>) => WMEUIHelperElement
 
 class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
@@ -58,9 +58,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
    * Create and add WMEUIHelperFieldset element
    */
-  addFieldset (id: string, title: string): WMEUIHelperElement {
+  addFieldset (id: string, title: string, attributes: Record<string, any> = {}): WMEUIHelperElement {
     return this.addElement(
-      new WMEUIHelperContainer._fieldsetClass(this.uid, id, title)
+      new WMEUIHelperContainer._fieldsetClass(this.uid, id, title, attributes)
     )
   }
 

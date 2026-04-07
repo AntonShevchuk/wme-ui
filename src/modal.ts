@@ -25,6 +25,7 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
 
     let panel = document.createElement('div')
     panel.className = 'wme-ui-panel'
+    this.applyAttributes(panel)
 
     let close = document.createElement('button')
     close.className = 'wme-ui-close-panel'
