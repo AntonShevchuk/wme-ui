@@ -62,9 +62,16 @@
         }
         /**
          * Add WMEUIHelperElement to container
+         * If already rendered, appends the new child to the live DOM
          */
         addElement(element) {
             this.elements.push(element);
+            if (this.element) {
+                const container = this.getChildContainer();
+                if (container) {
+                    container.append(element.html());
+                }
+            }
             return element;
         }
         /**
@@ -76,6 +83,18 @@
                 this.elements.splice(index, 1);
                 element.html().remove();
             }
+        }
+        /**
+         * Find the child container element in the rendered DOM
+         * Subclasses use .controls or .button-toolbar as the container for children
+         */
+        getChildContainer() {
+            if (!this.element)
+                return null;
+            return this.element.querySelector('.controls')
+                || this.element.querySelector('.button-toolbar')
+                || this.element.querySelector('.wme-ui-body')
+                || this.element;
         }
         /**
          * Apply attributes to HTML element

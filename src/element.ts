@@ -16,15 +16,22 @@ class WMEUIHelperElement {
   }
 
   /**
-   * Add WMEUIHelperElement to container
+   * Add WMEUIHelperElement to the container
+   * If already rendered, appends the new child to the live DOM
    */
   addElement (element: WMEUIHelperElement): WMEUIHelperElement {
     this.elements.push(element)
+    if (this.element) {
+      const container = this.getChildContainer()
+      if (container) {
+        container.append(element.html())
+      }
+    }
     return element
   }
 
   /**
-   * Remove WMEUIHelperElement from container
+   * Remove WMEUIHelperElement from the container
    */
   removeElement (element: WMEUIHelperElement): void {
     const index = this.elements.indexOf(element)
@@ -32,6 +39,18 @@ class WMEUIHelperElement {
       this.elements.splice(index, 1)
       element.html().remove()
     }
+  }
+
+  /**
+   * Find the child container element in the rendered DOM
+   * Subclasses use .controls or .button-toolbar as the container for children
+   */
+  getChildContainer (): HTMLElement | null {
+    if (!this.element) return null
+    return this.element.querySelector('.controls')
+      || this.element.querySelector('.button-toolbar')
+      || this.element.querySelector('.wme-ui-body')
+      || this.element
   }
 
   /**
