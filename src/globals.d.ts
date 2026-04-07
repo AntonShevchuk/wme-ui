@@ -3,3 +3,8 @@ declare const I18n: {
   translations: Record<string, any>
   t(key: string): any
 }
+
+declare module '*.css' {
+  const content: string
+  export default content
+}

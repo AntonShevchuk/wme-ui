@@ -1,0 +1,44 @@
+.wme-ui-panel {
+  width: 320px;
+  background: #fff;
+  margin: 15px;
+  border-radius: 5px;
+}
+
+.wme-ui-panel-container {
+  position: relative;
+}
+
+.wme-ui-header {
+  position: relative;
+}
+
+.wme-ui-header h5 {
+  padding: 16px 16px 0;
+}
+
+.wme-ui-close-panel {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 100%;
+  cursor: pointer;
+  font-size: 20px;
+  height: 20px;
+  line-height: 16px;
+  position: absolute;
+  right: 14px;
+  text-indent: -2px;
+  top: 14px;
+  transition: all 150ms;
+  width: 20px;
+  z-index: 99;
+}
+
+.wme-ui-body {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.wme-ui-footer {
+  padding: 4px 0;
+}
