@@ -9,9 +9,9 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
    * Create and add WMEUIHelperControlButton element
    */
-  addButton (id: string, title: string, description: string, callback: Function): WMEUIHelperElement {
+  addButton (id: string, title: string, description: string, callback: Function, attributes: Record<string, any> = {}): WMEUIHelperElement {
     return this.addElement(
-      new WMEUIHelperControlButton(this.uid, id, title, description, callback)
+      new WMEUIHelperControlButton(this.uid, id, title, description, callback, attributes)
     )
   }
 

@@ -34,14 +34,14 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
 }
 
 /**
- * Button with shortcut if needed
+ * Button with a shortcut if needed
  */
 class WMEUIHelperControlButton extends WMEUIHelperControl {
   description: string
   callback: Function
 
-  constructor (uid: string, id: string, title: string, description: string, callback: Function) {
-    super(uid, id, title)
+  constructor (uid: string, id: string, title: string, description: string, callback: Function, attributes: Record<string, any> = {}) {
+    super(uid, id, title, attributes)
     this.description = description
     this.callback = callback
   }
@@ -52,6 +52,7 @@ class WMEUIHelperControlButton extends WMEUIHelperControl {
     button.innerHTML = unsafePolicy.createHTML(this.title)
     button.title = this.description
     button.onclick = this.callback as any
+    this.applyAttributes(button)
     return button
   }
 }
