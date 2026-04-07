@@ -1,0 +1,16 @@
+.wme-ui-tab-header {
+  align-items: center;
+  display: flex;
+  gap: 9px;
+  justify-content: stretch;
+  padding: 8px;
+  width: 100%;
+}
+
+.wme-ui-tab-header .wme-ui-tab-icon {
+  font-size: 24px;
+}
+
+.wme-ui-tab-header .wme-ui-tab-image {
+  height: 42px;
+}
