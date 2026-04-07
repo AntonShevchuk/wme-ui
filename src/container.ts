@@ -2,11 +2,12 @@ import { WMEUIHelperElement } from './element'
 import { WMEUIHelperControlButton, WMEUIHelperControlInput } from './controls'
 import { WMEUIHelperDiv } from './div'
 import { WMEUIHelperText } from './text'
-import type { WMEUIHelperFieldset as FieldsetType } from './fieldset'
+
+type FieldsetConstructor = new (uid: string, id: string, title: string) => WMEUIHelperElement
 
 class WMEUIHelperContainer extends WMEUIHelperElement {
   /**
-   * Create and add button
+   * Create and add WMEUIHelperControlButton element
    */
   addButton (id: string, title: string, description: string, callback: Function): WMEUIHelperElement {
     return this.addElement(
@@ -31,7 +32,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
   }
 
   /**
-   * Create checkbox
+   * Create and add WMEUIHelperControlInput element
    */
   addCheckbox (id: string, title: string, callback: Function, checked: boolean = false): WMEUIHelperElement {
     return this.addElement(
@@ -39,7 +40,7 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
         'id': this.uid + '-' + id,
         'onclick': callback,
         'type': 'checkbox',
-        'value': 1,
+        'value': '1',
         'checked': checked,
       })
     )
@@ -59,12 +60,12 @@ class WMEUIHelperContainer extends WMEUIHelperElement {
    */
   addFieldset (id: string, title: string): WMEUIHelperElement {
     return this.addElement(
-      new (WMEUIHelperContainer._fieldsetClass as any)(this.uid, id, title)
+      new WMEUIHelperContainer._fieldsetClass(this.uid, id, title)
     )
   }
 
-  /** @internal — set by fieldset module to break circular dependency */
-  static _fieldsetClass: typeof FieldsetType
+  /** @internal — registered by fieldset module to break circular dependency */
+  static _fieldsetClass: FieldsetConstructor
 
   /**
    * Create text input

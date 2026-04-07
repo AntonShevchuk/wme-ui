@@ -14,15 +14,12 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
   }
 
   async inject (): Promise<void> {
-    this.sidebar
-      .registerScriptTab(this.uid)
-      .then(({ tabLabel, tabPane }: { tabLabel: HTMLElement, tabPane: HTMLElement }) => {
+    const { tabLabel, tabPane } = await this.sidebar.registerScriptTab(this.uid)
 
-        tabLabel.innerText = this.title
-        tabLabel.title = this.title
+    tabLabel.innerText = this.title
+    tabLabel.title = this.title
 
-        tabPane.append(this.html())
-      })
+    tabPane.append(this.html())
   }
 
   toHTML (): HTMLElement {

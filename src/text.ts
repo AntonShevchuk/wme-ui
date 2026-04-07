@@ -8,6 +8,16 @@ class WMEUIHelperText extends WMEUIHelperElement {
     p.innerHTML = unsafePolicy.createHTML(this.title)
     return p
   }
+
+  /**
+   * Update text content after rendering
+   */
+  setText (text: string): void {
+    this.title = text
+    if (this.element) {
+      this.element.innerHTML = unsafePolicy.createHTML(text)
+    }
+  }
 }
 
 export { WMEUIHelperText }

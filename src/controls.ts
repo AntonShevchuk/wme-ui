@@ -22,7 +22,7 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
     input = this.applyAttributes(input) as HTMLInputElement
 
     let label = document.createElement('label')
-    label.htmlFor = input.id
+    label.htmlFor = input.id || this.uid + '-' + this.id
     label.innerHTML = unsafePolicy.createHTML(this.title)
 
     let container = document.createElement('div')

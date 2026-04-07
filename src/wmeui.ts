@@ -24,8 +24,9 @@ class WMEUI {
   static addTranslation (uid: string, data: Record<string, any>): void {
     if (!data.en) {
       console.error('Default translation `en` is required')
+      return
     }
-    let locale = I18n.currentLocale()
+    const locale = I18n.currentLocale()
     I18n.translations[locale][uid] = data[locale] || data.en
   }
 }

@@ -45,8 +45,9 @@
         static addTranslation(uid, data) {
             if (!data.en) {
                 console.error('Default translation `en` is required');
+                return;
             }
-            let locale = I18n.currentLocale();
+            const locale = I18n.currentLocale();
             I18n.translations[locale][uid] = data[locale] || data.en;
         }
     }
@@ -61,7 +62,7 @@
             this.elements = [];
         }
         /**
-         * Add WMEUIHelperElement to container
+         * Add WMEUIHelperElement to the container
          * If already rendered, appends the new child to the live DOM
          */
         addElement(element) {
@@ -75,7 +76,7 @@
             return element;
         }
         /**
-         * Remove WMEUIHelperElement from container
+         * Remove WMEUIHelperElement from the container
          */
         removeElement(element) {
             const index = this.elements.indexOf(element);
@@ -97,7 +98,7 @@
                 || this.element;
         }
         /**
-         * Apply attributes to HTML element
+         * Apply attributes to the HTML element
          */
         applyAttributes(element) {
             for (const [attr, value] of Object.entries(this.attributes)) {
@@ -142,7 +143,7 @@
             let input = document.createElement('input');
             input = this.applyAttributes(input);
             let label = document.createElement('label');
-            label.htmlFor = input.id;
+            label.htmlFor = input.id || this.uid + '-' + this.id;
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let container = document.createElement('div');
             container.className = 'controls-container';
@@ -189,6 +190,15 @@
             p.innerHTML = unsafePolicy.createHTML(this.title);
             return p;
         }
+        /**
+         * Update text content after rendering
+         */
+        setText(text) {
+            this.title = text;
+            if (this.element) {
+                this.element.innerHTML = unsafePolicy.createHTML(text);
+            }
+        }
     }
 
     class WMEUIHelperContainer extends WMEUIHelperElement {
@@ -216,7 +226,7 @@
                 'id': this.uid + '-' + id,
                 'onclick': callback,
                 'type': 'checkbox',
-                'value': 1,
+                'value': '1',
                 'checked': checked,
             }));
         }
@@ -322,13 +332,10 @@
             this.image = attributes.image;
         }
         async inject() {
-            this.sidebar
-                .registerScriptTab(this.uid)
-                .then(({ tabLabel, tabPane }) => {
-                tabLabel.innerText = this.title;
-                tabLabel.title = this.title;
-                tabPane.append(this.html());
-            });
+            const { tabLabel, tabPane } = await this.sidebar.registerScriptTab(this.uid);
+            tabLabel.innerText = this.title;
+            tabLabel.title = this.title;
+            tabPane.append(this.html());
         }
         toHTML() {
             let header = document.createElement('div');
