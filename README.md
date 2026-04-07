@@ -1,171 +1,277 @@
 # WME UI
-UI Library for Waze Map Editor Greasy Fork scripts
 
-## Methods
+UI Library for Waze Map Editor userscripts. Provides a set of helper classes to build sidebar tabs, panels, modals, fieldsets, and form controls.
 
-### WMEUI
-* `WMEUI.addTranslation(name, translation)` – add translation to the `I180n` object, to call use syntax like this `I180n.t(name).element`
-* `WMEUI.addStyle(css)` – inject CSS to the page
-* `WMEUI.addShortcut (name, desc, group, title, shortcut, callback, scope = null)` - create shortcut
+## Require Script
 
-### WMEUIHelper
+```javascript
+// @require https://update.greasyfork.org/scripts/450320/WME-UI.js
+```
 
-* `createPanel (title, description = null, attributes = {})` – create a panel for the sidebar container
-* `createTab (title, description = null, attributes = {})` – create a tab for the sidebar container
-* `createModal (title, description = null)` – create a modal window container
-* `createFieldset (title, description = null)` – create a field container
+## Quick Start
 
-### WMEUIHelperContainer
-A parent class for all containers
+```javascript
+const NAME = 'My Script'
 
-* `addElement (element)` - add `WMEUIHelperElement` to a container
-* `addDiv (id, innerHTML, attributes)` - add `WMEUIHelperDiv` to a container
-* `addText (id, text)` - add `WMEUIHelperText` to a container
-* `addFieldset (id, title, description)` - add `WMEUIHelperFieldset` to a container
-* `addInput (id, title, callback, value = '')` - add `WMEUIHelperControlInput` with `type=text` to a container
-* `addNumber (id, title, callback, value = 0, min, max, step = 10)` - `WMEUIHelperControlInput` with `type=number` to a container
-* `addCheckbox (id, title, callback, checked = false)` - add `WMEUIHelperControlInput` with `type=checkbox` to a container
-* `addRadio (id, title, callback, name, value, checked = false)` - add `WMEUIHelperControlInput` with `type=radio` to a container
-* `addRange (id, title, callback, value, min, max, step = 10)` - add `WMEUIHelperControlInput` with `type=range` to a container
-* `addButton (id, title, description, callback, shortcut = null)` - add `WMEUIHelperControlButton` to a container
-* `addButtons (buttons)` - add set of the `WMEUIHelperControlButton` to a container
+// Translations (English is required)
+WMEUI.addTranslation(NAME, {
+  en: { title: 'My Script', greeting: 'Hello!' },
+  uk: { title: 'Мій скрипт', greeting: 'Привіт!' },
+})
 
-### WMEUIHelperPanel
-A container for the sidebar panel 
+// Custom styles
+WMEUI.addStyle('.my-script button { color: red; }')
 
-### WMEUIHelperTab
-A container for the sidebar tab
+// Create a helper instance
+const helper = new WMEUIHelper(NAME)
+```
 
-### WMEUIHelperModal
-A container for modal window
+## API Reference
 
-### WMEUIHelperFieldset
-A container for field set HTML element
+### WMEUI (static)
 
-### WMEUIShortcut
-Create shortcut for callback function
+| Method | Description |
+|--------|-------------|
+| `WMEUI.addTranslation(name, data)` | Register translations. Access via `I18n.t(name).key` |
+| `WMEUI.addStyle(css)` | Inject CSS into the page |
+| `WMEUI.normalize(string)` | Convert string to kebab-case ID |
 
-* `new WMEUIShortcut(name, description, group, title, shortcut, callback, scope = null)` - create shortcut
+### WMEUIHelper (factory)
+
+```javascript
+const helper = new WMEUIHelper('My Script')
+```
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `createTab(title, attributes?)` | `WMEUIHelperTab` | Sidebar tab |
+| `createPanel(title, attributes?)` | `WMEUIHelperPanel` | Sidebar panel |
+| `createModal(title, attributes?)` | `WMEUIHelperModal` | Modal window |
+| `createFieldset(title, attributes?)` | `WMEUIHelperFieldset` | Fieldset container |
+
+### WMEUIHelperContainer (base for Tab, Panel, Modal, Fieldset)
+
+| Method | Description |
+|--------|-------------|
+| `addButton(id, title, description, callback)` | Add a button |
+| `addButtons(buttons)` | Add multiple buttons from an object |
+| `addCheckbox(id, title, callback, checked?)` | Add a checkbox |
+| `addRadio(id, title, callback, name, value, checked?)` | Add a radio button |
+| `addInput(id, title, callback, value?)` | Add a text input |
+| `addNumber(id, title, callback, value?, min, max, step?)` | Add a number input |
+| `addRange(id, title, callback, value, min, max, step?)` | Add a range slider |
+| `addText(id, text)` | Add a paragraph |
+| `addDiv(id, innerHTML?, attributes?)` | Add a div |
+| `addFieldset(id, title, attributes?)` | Add a nested fieldset |
+| `addElement(element)` | Add any WMEUIHelperElement |
+| `removeElement(element)` | Remove a child element |
+
+### WMEUIHelperText
+
+| Method | Description |
+|--------|-------------|
+| `setText(text)` | Update text content dynamically |
 
 ## Examples
 
+### Tab with Settings
+
 ```javascript
-(function () {
-  'use strict'
+$(document).on('bootstrap.wme', () => {
+  const helper = new WMEUIHelper(NAME)
 
-  const NAME = 'Script Name'
+  const tab = helper.createTab(I18n.t(NAME).title, {
+    sidebar: wmeSDK.Sidebar,
+    image: GM_info.script.icon,  // or icon: 'polygon'
+  })
 
-  // translation structure
-  const TRANSLATION = {
-    'en': {
-      title: 'Copy address',
-    },
-    'uk': {
-      title: 'Копіювати адресу',
-    },
-    'ru': {
-      title: 'Копировать адреc',
-    }
-  }
+  // Description text
+  tab.addText('description', I18n.t(NAME).description)
 
-  const STYLE = '.script-name { border: 1px solid #ccc }'
-
-  // Add translation
-  WMEUI.addTranslation(NAME, TRANSLATION)
-
-  // Add custom style
-  WMEUI.addStyle(STYLE)
-
-  // Create shortcut
-  new WMEUIShortcut(
-    NAME + '-script',        // unique name
-    I18n.t(NAME).title,      // description
-    NAME,                    // group (use the same group for all shortcuts of the script)
-    I18n.t(NAME).title,      // title shortcut section
-    'C+D',                   // shortcut
-    () => console.log('ok'), // callback
-    null                     // scope
+  // Settings fieldset with checkboxes
+  const settings = helper.createFieldset(I18n.t(NAME).settings.title)
+  settings.addCheckbox(
+    'option-a',
+    'Enable feature A',
+    (event) => console.log('A:', event.target.checked),
+    true  // default checked
   )
+  settings.addCheckbox(
+    'option-b',
+    'Enable feature B',
+    (event) => console.log('B:', event.target.checked),
+    false
+  )
+  tab.addElement(settings)
 
-  // buttons structure
-  const BUTTONS = {
-    A: {
-      title: I180n.t(NAME).buttons.A.title,
-      description: I180n.t(NAME).buttons.A.description,
-      shortcut: 'S+49',
-      callback: function() {
-        console.log('Button 1');
-        return false;
-      }
-    },
-    B: {
-      title: I180n.t(NAME).buttons.B.title,
-      description: I180n.t(NAME).buttons.B.description,
-      shortcut: 'S+50',
-      callback: function() {
-        console.log('Button 2');
-        return false;
-      }
-    },
-  };
+  // Number input
+  const ranges = helper.createFieldset('Parameters')
+  ranges.addNumber(
+    'radius',
+    'Search radius (m)',
+    (event) => console.log('Radius:', event.target.value),
+    200, 50, 1000, 50
+  )
+  tab.addElement(ranges)
 
-  let helper, panel, modal, tab;
+  // Footer
+  tab.addText('info', '<a href="#">My Script</a> v1.0')
 
-  $(document)
-    .on('bootstrap.wme', function () {
-      console.info('ready');
+  tab.inject()
+})
+```
 
-      helper = new WMEUIHelper(NAME);
+### Panel with Buttons on Sidebar
 
-      // Create buttons on the sidebar
-      panel = helper.createPanel(I18n.t(NAME).title);
-      panel.addButtons(BUTTONS);
+```javascript
+const helper = new WMEUIHelper(NAME)
+const panel = helper.createPanel(I18n.t(NAME).title)
 
-      // Create buttons in the modal
-      modal = helper.createModal(I18n.t(NAME).title);
-      modal.addButtons(BUTTONS);
+// Define buttons
+const BUTTONS = {
+  A: {
+    title: 'Simplify',
+    description: 'Simplify geometry',
+    callback: () => console.log('Simplify clicked'),
+  },
+  B: {
+    title: 'Straighten',
+    description: 'Straighten geometry',
+    callback: () => console.log('Straighten clicked'),
+  },
+}
 
-      // Create buttons on the sidebar in the dedicated tab
-      tab = helper.createTab(I18n.t(NAME).title);
-      tab.addButtons(BUTTONS);
-      tab.inject();
-    })
-    .on('point.wme', (e, el) => {
-      console.log('point', el);
-      el.append(panel.toHTML());
-    })
-    .on('place.wme', (e, el) => {
-      console.info('place', el);
-      el.append(panel.toHTML());
-    });
-})();
+panel.addButtons(BUTTONS)
+
+// Show panel when a segment is selected
+$(document).on('segment.wme', (event, element, model) => {
+  element.prepend(panel.html())
+})
+```
+
+### Modal Window
+
+```javascript
+const helper = new WMEUIHelper(NAME)
+
+function showModal () {
+  const modal = helper.createModal('Preview')
+
+  // Add content
+  modal.addDiv('content', '<p>Some content here</p>')
+  modal.addButton('close', 'OK', 'Close modal', () => {
+    modal.html().remove()
+  })
+
+  // Inject into page
+  modal.inject()
+}
+```
+
+### Radio Buttons
+
+```javascript
+const fieldset = helper.createFieldset('Map Provider')
+
+fieldset.addRadio('map-google', 'Google Maps',
+  () => settings.set(['provider'], 'google'),
+  'provider', 'google', true
+)
+fieldset.addRadio('map-osm', 'OpenStreetMap',
+  () => settings.set(['provider'], 'osm'),
+  'provider', 'osm', false
+)
+
+tab.addElement(fieldset)
+```
+
+### Range Slider
+
+```javascript
+const fieldset = helper.createFieldset('Offset')
+
+const slider = fieldset.addRange(
+  'offset-x', 'Horizontal', 
+  (event) => {
+    console.log('Offset:', event.target.value)
+  },
+  0,    // default value
+  -20,  // min
+  20,   // max
+  0.1   // step
+)
+
+tab.addElement(fieldset)
+```
+
+### Dynamic Content Updates
+
+```javascript
+// Add text element
+const counter = tab.addText('counter', 'Count: 0')
+
+// Update later
+counter.setText('Count: 42')
+
+// Add elements after rendering
+const panel = helper.createPanel('Title')
+element.prepend(panel.html())  // rendered
+
+// This button appears immediately in the live DOM
+panel.addButton('new', 'New Button', 'Added dynamically', () => {})
+```
+
+## Class Hierarchy
+
+```
+WMEUIHelperElement (base)
+├── WMEUIHelperContainer (adds form control methods)
+│   ├── WMEUIHelperTab      — sidebar tab
+│   ├── WMEUIHelperPanel    — sidebar panel
+│   ├── WMEUIHelperModal    — modal window
+│   └── WMEUIHelperFieldset — fieldset grouping
+├── WMEUIHelperDiv           — generic div
+├── WMEUIHelperText          — paragraph with setText()
+└── WMEUIHelperControl       — base for inputs
+    ├── WMEUIHelperControlInput  — input/checkbox/radio/range
+    └── WMEUIHelperControlButton — clickable button
 ```
 
 ## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Build the userscript
-npm run build
-
-# Watch for changes and rebuild
-npm run watch
-
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
+npm run build       # build → dist/WME-UI.user.js
+npm run watch       # rebuild on changes
+npm test            # run tests
+npm run test:watch  # tests in watch mode
 ```
 
-Source is written in TypeScript under `src/`, built with Rollup into `dist/WME-UI.user.js`.
+### Project Structure
+
+```
+src/
+├── meta.ts          # userscript header
+├── globals.d.ts     # I18n declaration + CSS module
+├── unsafe-policy.ts # Trusted Types polyfill
+├── wmeui.ts         # WMEUI static class
+├── element.ts       # WMEUIHelperElement base
+├── container.ts     # WMEUIHelperContainer (form controls)
+├── controls.ts      # Input + Button controls
+├── fieldset.ts      # Fieldset container
+├── panel.ts         # Sidebar panel
+├── tab.ts + tab.css # Sidebar tab
+├── modal.ts + modal.css # Modal window
+├── div.ts           # Div element
+├── text.ts          # Text paragraph
+├── helper.ts        # WMEUIHelper factory
+└── index.ts         # global exports
+```
 
 ## Links
 
-Author homepage: https://anton.shevchuk.name/  
-Author pet projects: https://hohli.com/  
-Support author: https://donate.hohli.com/  
-Script homepage: https://github.com/AntonShevchuk/wme-ui  
-GreasyFork: https://greasyfork.org/en/scripts/450320-wme-ui  
+Author homepage: https://anton.shevchuk.name/
+Author pet projects: https://hohli.com/
+Support author: https://donate.hohli.com/
+Script homepage: https://github.com/AntonShevchuk/wme-ui
+GreasyFork: https://greasyfork.org/en/scripts/450320-wme-ui
