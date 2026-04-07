@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.5.0
+// @version      0.6.0
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -153,11 +153,11 @@
         }
     }
     /**
-     * Button with shortcut if needed
+     * Button with a shortcut if needed
      */
     class WMEUIHelperControlButton extends WMEUIHelperControl {
-        constructor(uid, id, title, description, callback) {
-            super(uid, id, title);
+        constructor(uid, id, title, description, callback, attributes = {}) {
+            super(uid, id, title, attributes);
             this.description = description;
             this.callback = callback;
         }
@@ -167,6 +167,7 @@
             button.innerHTML = unsafePolicy.createHTML(this.title);
             button.title = this.description;
             button.onclick = this.callback;
+            this.applyAttributes(button);
             return button;
         }
     }
@@ -174,6 +175,7 @@
     class WMEUIHelperDiv extends WMEUIHelperElement {
         toHTML() {
             let div = document.createElement('div');
+            div.className = 'wme-ui-helper-div';
             div.id = this.uid + '-' + this.id;
             div = this.applyAttributes(div);
             if (this.title) {
@@ -205,8 +207,8 @@
         /**
          * Create and add WMEUIHelperControlButton element
          */
-        addButton(id, title, description, callback) {
-            return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback));
+        addButton(id, title, description, callback, attributes = {}) {
+            return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback, attributes));
         }
         /**
          * Create buttons
@@ -215,6 +217,17 @@
             for (let key in buttons) {
                 if (buttons.hasOwnProperty(key)) {
                     this.addButton(key, buttons[key].title, buttons[key].description, buttons[key].callback);
+                }
+            }
+        }
+        /**
+         * Create checkboxes from an object
+         * Each key becomes a checkbox with title, callback, and checked state
+         */
+        addCheckboxes(checkboxes) {
+            for (const key in checkboxes) {
+                if (checkboxes.hasOwnProperty(key)) {
+                    this.addCheckbox(key, checkboxes[key].title, checkboxes[key].callback, checkboxes[key].checked || false);
                 }
             }
         }
@@ -239,8 +252,8 @@
         /**
          * Create and add WMEUIHelperFieldset element
          */
-        addFieldset(id, title) {
-            return this.addElement(new WMEUIHelperContainer._fieldsetClass(this.uid, id, title));
+        addFieldset(id, title, attributes = {}) {
+            return this.addElement(new WMEUIHelperContainer._fieldsetClass(this.uid, id, title, attributes));
         }
         /**
          * Create text input
@@ -312,18 +325,29 @@
         toHTML() {
             let label = document.createElement('wz-label');
             label.htmlFor = '';
+            label.className = 'wme-ui-label';
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let controls = document.createElement('div');
-            controls.className = 'controls';
+            controls.className = 'wme-ui-controls controls';
             this.elements.forEach(element => controls.append(element.html()));
             let group = document.createElement('div');
-            group.className = 'form-group';
+            group.className = 'wme-ui-form-group form-group';
             group.append(label);
             group.append(controls);
             return group;
         }
     }
 
+    var css_248z$1 = ".wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n";
+
+    function injectTabStyles() {
+        if (!document.querySelector('style[data-wme-ui-tab]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-wme-ui-tab', '');
+            style.innerHTML = unsafePolicy.createHTML(css_248z$1);
+            document.head.appendChild(style);
+        }
+    }
     class WMEUIHelperTab extends WMEUIHelperContainer {
         constructor(uid, id, title, attributes = {}) {
             super(uid, id, title, attributes);
@@ -338,28 +362,22 @@
             tabPane.append(this.html());
         }
         toHTML() {
+            injectTabStyles();
             let header = document.createElement('div');
-            header.className = 'panel-header-component settings-header';
-            header.style.alignItems = 'center';
-            header.style.display = 'flex';
-            header.style.gap = '9px';
-            header.style.justifyContent = 'stretch';
-            header.style.padding = '8px';
-            header.style.width = '100%';
+            header.className = 'wme-ui-tab-header panel-header-component settings-header';
             if (this.icon) {
                 let icon = document.createElement('i');
-                icon.className = 'w-icon panel-header-component-icon w-icon-' + this.icon;
-                icon.style.fontSize = '24px';
+                icon.className = 'wme-ui-tab-icon w-icon panel-header-component-icon w-icon-' + this.icon;
                 header.append(icon);
             }
             if (this.image) {
                 let img = document.createElement('img');
-                img.style.height = '42px';
+                img.className = 'wme-ui-tab-image';
                 img.src = this.image;
                 header.append(img);
             }
             let title = document.createElement('div');
-            title.className = 'feature-id-container';
+            title.className = 'wme-ui-tab-title feature-id-container';
             title.innerHTML = unsafePolicy.createHTML('<wz-overline>' + this.title + '</wz-overline>');
             header.append(title);
             let controls = document.createElement('div');
@@ -373,51 +391,13 @@
         }
     }
 
-    const MODAL_CSS = `
-.wme-ui-panel {
-  width: 320px;
-  background: #fff;
-  margin: 15px;
-  border-radius: 5px;
-}
-.wme-ui-panel-container {
-  position: relative;
-}
-.wme-ui-header {
-  position: relative;
-}
-.wme-ui-header h5 {
-  padding: 16px 16px 0;
-}
-.wme-ui-close-panel {
-  background: #fff;
-  border: 1px solid #ececec;
-  border-radius: 100%;
-  cursor: pointer;
-  font-size: 20px;
-  height: 20px;
-  line-height: 16px;
-  position: absolute;
-  right: 14px;
-  text-indent: -2px;
-  top: 14px;
-  transition: all 150ms;
-  width: 20px;
-  z-index: 99;
-}
-.wme-ui-body {
-  max-height: 70vh;
-  overflow: auto;
-}
-.wme-ui-footer {
-  padding: 4px 0;
-}
-`;
+    var css_248z = ".wme-ui-panel {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-panel-container {\n  position: relative;\n}\n\n.wme-ui-header {\n  position: relative;\n}\n\n.wme-ui-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-close-panel {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-body {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-footer {\n  padding: 4px 0;\n}\n";
+
     function injectModalStyles() {
         if (!document.querySelector('style[data-wme-ui-modal]')) {
             const style = document.createElement('style');
             style.setAttribute('data-wme-ui-modal', '');
-            style.innerHTML = unsafePolicy.createHTML(MODAL_CSS);
+            style.innerHTML = unsafePolicy.createHTML(css_248z);
             document.head.appendChild(style);
         }
     }
@@ -432,6 +412,7 @@
             injectModalStyles();
             let panel = document.createElement('div');
             panel.className = 'wme-ui-panel';
+            this.applyAttributes(panel);
             let close = document.createElement('button');
             close.className = 'wme-ui-close-panel';
             close.innerText = '\u00d7';
@@ -462,9 +443,10 @@
     class WMEUIHelperFieldset extends WMEUIHelperContainer {
         toHTML() {
             let legend = document.createElement('legend');
+            legend.className = 'wme-ui-legend';
             legend.innerHTML = unsafePolicy.createHTML(this.title);
             let controls = document.createElement('div');
-            controls.className = 'controls';
+            controls.className = 'wme-ui-controls controls';
             this.elements.forEach(element => controls.append(element.html()));
             let fieldset = document.createElement('fieldset');
             fieldset = this.applyAttributes(fieldset);

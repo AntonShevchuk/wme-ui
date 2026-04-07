@@ -1,4 +1,5 @@
 import typescript from '@rollup/plugin-typescript'
+import postcss from 'rollup-plugin-postcss'
 import { readFileSync } from 'fs'
 
 const meta = readFileSync('src/meta.ts', 'utf-8')
@@ -13,6 +14,7 @@ export default {
     banner,
   },
   plugins: [
+    postcss({ inject: false }),
     typescript(),
   ],
 }
