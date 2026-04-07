@@ -203,7 +203,7 @@
 
     class WMEUIHelperContainer extends WMEUIHelperElement {
         /**
-         * Create and add button
+         * Create and add WMEUIHelperControlButton element
          */
         addButton(id, title, description, callback) {
             return this.addElement(new WMEUIHelperControlButton(this.uid, id, title, description, callback));
@@ -219,7 +219,7 @@
             }
         }
         /**
-         * Create checkbox
+         * Create and add WMEUIHelperControlInput element
          */
         addCheckbox(id, title, callback, checked = false) {
             return this.addElement(new WMEUIHelperControlInput(this.uid, id, title, {
@@ -373,6 +373,54 @@
         }
     }
 
+    const MODAL_CSS = `
+.wme-ui-panel {
+  width: 320px;
+  background: #fff;
+  margin: 15px;
+  border-radius: 5px;
+}
+.wme-ui-panel-container {
+  position: relative;
+}
+.wme-ui-header {
+  position: relative;
+}
+.wme-ui-header h5 {
+  padding: 16px 16px 0;
+}
+.wme-ui-close-panel {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 100%;
+  cursor: pointer;
+  font-size: 20px;
+  height: 20px;
+  line-height: 16px;
+  position: absolute;
+  right: 14px;
+  text-indent: -2px;
+  top: 14px;
+  transition: all 150ms;
+  width: 20px;
+  z-index: 99;
+}
+.wme-ui-body {
+  max-height: 70vh;
+  overflow: auto;
+}
+.wme-ui-footer {
+  padding: 4px 0;
+}
+`;
+    function injectModalStyles() {
+        if (!document.querySelector('style[data-wme-ui-modal]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-wme-ui-modal', '');
+            style.innerHTML = unsafePolicy.createHTML(MODAL_CSS);
+            document.head.appendChild(style);
+        }
+    }
     class WMEUIHelperModal extends WMEUIHelperContainer {
         container() {
             return document.getElementById('tippy-container');
@@ -381,53 +429,26 @@
             this.container()?.append(this.html());
         }
         toHTML() {
-            // Panel (declared first so close button can reference it)
+            injectModalStyles();
             let panel = document.createElement('div');
-            panel.style.width = '320px';
-            panel.style.background = '#fff';
-            panel.style.margin = '15px';
-            panel.style.borderRadius = '5px';
             panel.className = 'wme-ui-panel';
-            // Header and close button
             let close = document.createElement('button');
             close.className = 'wme-ui-close-panel';
-            close.style.background = '#fff';
-            close.style.border = '1px solid #ececec';
-            close.style.borderRadius = '100%';
-            close.style.cursor = 'pointer';
-            close.style.fontSize = '20px';
-            close.style.height = '20px';
-            close.style.lineHeight = '16px';
-            close.style.position = 'absolute';
-            close.style.right = '14px';
-            close.style.textIndent = '-2px';
-            close.style.top = '14px';
-            close.style.transition = 'all 150ms';
-            close.style.width = '20px';
-            close.style.zIndex = '99';
             close.innerText = '\u00d7';
             close.onclick = function () {
                 panel.remove();
             };
             let title = document.createElement('h5');
-            title.style.padding = '16px 16px 0';
             title.innerHTML = unsafePolicy.createHTML(this.title);
             let header = document.createElement('div');
             header.className = 'wme-ui-header';
-            header.style.position = 'relative';
             header.prepend(title);
             header.prepend(close);
-            // Body
             let body = document.createElement('div');
             body.className = 'wme-ui-body';
-            body.style.maxHeight = '70vh';
-            body.style.overflow = 'auto';
             this.elements.forEach(element => body.append(element.html()));
-            // Footer
             let footer = document.createElement('div');
             footer.className = 'wme-ui-footer';
-            footer.style.padding = '4px 0';
-            // Container
             let container = document.createElement('div');
             container.className = 'wme-ui-panel-container';
             container.append(header);
