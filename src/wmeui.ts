@@ -52,13 +52,6 @@ class WMEUI {
 
     // Store internally
     this._translations[uid] = data
-
-    // Register with I18n for backward compatibility
-    const locale = this.getLocale()
-    if (!I18n.translations[locale]) {
-      I18n.translations[locale] = {}
-    }
-    I18n.translations[locale][uid] = data[locale] || data.en
   }
 
   /**

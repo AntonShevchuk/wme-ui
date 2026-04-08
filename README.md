@@ -38,7 +38,7 @@ const helper = new WMEUIHelper(NAME)
 |------------------------------------|----------|----------------------------------------------------------------|
 | `WMEUI.addTranslation(name, data)` | `void`   | Register translations (English required)                       |
 | `WMEUI.t(name)`                    | `object` | Get translations — auto locale detection with English fallback |
-| `WMEUI.getLocale()`               | `string` | Get current locale code from WME SDK (cached)                  |
+| `WMEUI.getLocale()`                | `string` | Get current locale code from WME SDK (cached)                  |
 | `WMEUI.addStyle(css)`              | `void`   | Inject CSS into the page                                       |
 | `WMEUI.normalize(string)`          | `string` | Convert string to kebab-case ID                                |
 
@@ -57,21 +57,21 @@ const helper = new WMEUIHelper('My Script')
 
 ### WMEUIHelperContainer (base for Tab, Panel, Modal, Fieldset)
 
-| Method                                                           | Description                          |
-|------------------------------------------------------------------|--------------------------------------|
-| `addButton(id, title, description, callback, attributes?)`      | Add a button                         |
-| `addButtons(buttons)`                                            | Add multiple buttons from an object  |
-| `addCheckbox(id, title, callback, checked?)`                    | Add a checkbox                       |
-| `addCheckboxes(checkboxes)`                                      | Add multiple checkboxes from object  |
-| `addRadio(id, title, callback, name, value, checked?)`          | Add a radio button                   |
-| `addInput(id, title, callback, value?)`                          | Add a text input                     |
-| `addNumber(id, title, callback, value?, min, max, step?)`       | Add a number input                   |
-| `addRange(id, title, callback, value, min, max, step?)`         | Add a range slider                   |
-| `addText(id, text)`                                              | Add a paragraph                      |
-| `addDiv(id, innerHTML?, attributes?)`                            | Add a div                            |
-| `addFieldset(id, title, attributes?)`                            | Add a nested fieldset                |
-| `addElement(element)`                                            | Add any WMEUIHelperElement           |
-| `removeElement(element)`                                         | Remove a child element               |
+| Method                                                     | Description                         |
+|------------------------------------------------------------|-------------------------------------|
+| `addButton(id, title, description, callback, attributes?)` | Add a button                        |
+| `addButtons(buttons)`                                      | Add multiple buttons from an object |
+| `addCheckbox(id, title, callback, checked?)`               | Add a checkbox                      |
+| `addCheckboxes(checkboxes)`                                | Add multiple checkboxes from object |
+| `addRadio(id, title, callback, name, value, checked?)`     | Add a radio button                  |
+| `addInput(id, title, callback, value?)`                    | Add a text input                    |
+| `addNumber(id, title, callback, value?, min, max, step?)`  | Add a number input                  |
+| `addRange(id, title, callback, value, min, max, step?)`    | Add a range slider                  |
+| `addText(id, text)`                                        | Add a paragraph                     |
+| `addDiv(id, innerHTML?, attributes?)`                      | Add a div                           |
+| `addFieldset(id, title, attributes?)`                      | Add a nested fieldset               |
+| `addElement(element)`                                      | Add any WMEUIHelperElement          |
+| `removeElement(element)`                                   | Remove a child element              |
 
 ### WMEUIHelperText
 

@@ -54,7 +54,7 @@ class WMEUIHelperElement {
   }
 
   /**
-   * Apply attributes to HTML element
+   * Apply attributes to the HTML element
    */
   applyAttributes (element: HTMLElement): HTMLElement {
     for (const [attr, value] of Object.entries(this.attributes)) {

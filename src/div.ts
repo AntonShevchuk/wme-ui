@@ -4,6 +4,7 @@ import { unsafePolicy } from './unsafe-policy'
 class WMEUIHelperDiv extends WMEUIHelperElement {
   toHTML (): HTMLElement {
     let div = document.createElement('div')
+    div.className = 'wme-ui-helper-div'
     div.id = this.uid + '-' + this.id
     div = this.applyAttributes(div) as HTMLDivElement
     if (this.title) {

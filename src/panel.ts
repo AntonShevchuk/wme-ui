@@ -13,14 +13,15 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
   toHTML (): HTMLElement {
     let label = document.createElement('wz-label') as HTMLElement
     ;(label as any).htmlFor = ''
+    label.className = 'wme-ui-label'
     label.innerHTML = unsafePolicy.createHTML(this.title)
 
     let controls = document.createElement('div')
-    controls.className = 'controls'
+    controls.className = 'wme-ui-controls controls'
     this.elements.forEach(element => controls.append(element.html()))
 
     let group = document.createElement('div')
-    group.className = 'form-group'
+    group.className = 'wme-ui-form-group form-group'
     group.append(label)
     group.append(controls)
     return group
