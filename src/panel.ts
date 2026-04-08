@@ -24,7 +24,6 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
     injectPanelStyles()
 
     let label = document.createElement('wz-label') as HTMLElement
-    ;(label as any).htmlFor = ''
     label.className = 'wme-ui-panel-label'
     label.innerHTML = unsafePolicy.createHTML(this.title)
 

@@ -18,6 +18,10 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
     let legend = document.createElement('legend')
     legend.className = 'wme-ui-fieldset-legend'
     legend.innerHTML = unsafePolicy.createHTML(this.title)
+    legend.onclick = () => {
+      fieldset.classList.toggle('collapsed')
+      return false
+    }
 
     let content = document.createElement('div')
     content.className = 'wme-ui-fieldset-content'
@@ -25,6 +29,7 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
     this.elements.forEach(element => content.append(element.html()))
 
     let fieldset = document.createElement('fieldset')
+    fieldset.className = 'wme-ui-fieldset'
     fieldset = this.applyAttributes(fieldset) as HTMLFieldSetElement
     fieldset.append(legend)
     fieldset.append(content)

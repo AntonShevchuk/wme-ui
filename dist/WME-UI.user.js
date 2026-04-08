@@ -113,6 +113,15 @@
             return element;
         }
         /**
+         * Remove this element from the DOM and reset its state
+         */
+        remove() {
+            if (this.element) {
+                this.element.remove();
+                this.element = null;
+            }
+        }
+        /**
          * Remove WMEUIHelperElement from the container
          */
         removeElement(element) {
@@ -129,9 +138,9 @@
             if (!this.element)
                 return null;
             return this.element.querySelector('.wme-ui-modal-content')
-                || this.element.querySelector('.wme-ui-fieldset-content')
                 || this.element.querySelector('.wme-ui-panel-content')
                 || this.element.querySelector('.wme-ui-tab-content')
+                || this.element.querySelector('.wme-ui-fieldset-content')
                 || this.element;
         }
         /**
@@ -139,7 +148,12 @@
          */
         applyAttributes(element) {
             for (const [attr, value] of Object.entries(this.attributes)) {
-                element[attr] = value;
+                if (attr === 'className' && element.className) {
+                    element.className += ' ' + value;
+                }
+                else {
+                    element[attr] = value;
+                }
             }
             return element;
         }
@@ -185,9 +199,24 @@
             label.htmlFor = input.id || this.uid + '-' + this.id;
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let container = document.createElement('div');
-            container.className = 'wme-ui-controls-container';
-            container.append(input);
+            container.className = 'wme-ui-controls-container controls-container';
             container.append(label);
+            // Add <output> element for range inputs to display current value
+            if (this.attributes.type === 'range') {
+                let output = document.createElement('output');
+                output.className = 'wme-ui-controls-output';
+                output.htmlFor.add(input.id || this.uid + '-' + this.id);
+                output.value = String(input.value);
+                const userCallback = input.onchange;
+                input.onchange = null;
+                input.oninput = function (e) {
+                    output.value = e.target.value;
+                    if (userCallback)
+                        userCallback.call(input, e);
+                };
+                container.append(output);
+            }
+            container.append(input);
             return container;
         }
     }
@@ -375,7 +404,6 @@
         toHTML() {
             injectPanelStyles();
             let label = document.createElement('wz-label');
-            label.htmlFor = '';
             label.className = 'wme-ui-panel-label';
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let content = document.createElement('div');
@@ -442,7 +470,7 @@
         }
     }
 
-    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-content {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
+    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 12px 12px 0;\n  font-size: 18px;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 12px;\n  text-indent: -2px;\n  top: 12px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-content {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
 
     function injectModalStyles() {
         if (!document.querySelector('style[data-wme-ui-modal]')) {
@@ -491,7 +519,7 @@
         }
     }
 
-    var css_248z = ".wme-ui-fieldset-legend {\n  /* fieldset legend/title */\n}\n\n.wme-ui-fieldset-content {\n  /* fieldset controls container */\n}\n";
+    var css_248z = ".wme-ui-fieldset {\n    margin: 4px 0;\n}\n\n.wme-ui-fieldset-legend {\n    cursor: pointer;\n    font-size: 12px;\n    font-weight: bold;\n    width: 100%;\n    text-align: right;\n    margin: 0;\n    padding: 2px 8px;\n    background-color: #f6f7f7;\n\n    border-radius: 8px 8px 0 0;\n    border: 1px solid #e5e5e5;\n}\n\n.wme-ui-fieldset-legend::after {\n    content: \"\\00a0\\2191\";\n    font-size: 10px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-legend::after {\n    content: \"\\00a0\\2193\";\n}\n\n.wme-ui-fieldset-content {\n    border: 1px solid #ddd;\n    border-top: 0;\n    border-radius: 0 0 8px 8px;\n    padding: 8px;\n}\n\n.wme-ui-fieldset-content label {\n    white-space: normal;\n    font-weight: normal;\n    font-size: 13px;\n}\n\n.wme-ui-fieldset-content input[type=\"text\"] {\n    float: right;\n    height: 28px;\n}\n\n.wme-ui-fieldset-content input[type=\"number\"] {\n    float: right;\n    height: 28px;\n    width: 60px;\n    text-align: right;\n}\n\n.wme-ui-fieldset-content input[type=\"range\"] {\n    width: 100%;\n}\n\n.wme-ui-controls-output {\n    float: right;\n    font-size: 13px;\n    min-width: 30px;\n    text-align: right;\n    padding: 2px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-legend {\n    border-radius: 8px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-content {\n    display: none;\n}\n";
 
     function injectFieldsetStyles() {
         if (!document.querySelector('style[data-wme-ui-fieldset]')) {
@@ -507,10 +535,15 @@
             let legend = document.createElement('legend');
             legend.className = 'wme-ui-fieldset-legend';
             legend.innerHTML = unsafePolicy.createHTML(this.title);
+            legend.onclick = () => {
+                fieldset.classList.toggle('collapsed');
+                return false;
+            };
             let content = document.createElement('div');
             content.className = 'wme-ui-fieldset-content';
             this.elements.forEach(element => content.append(element.html()));
             let fieldset = document.createElement('fieldset');
+            fieldset.className = 'wme-ui-fieldset';
             fieldset = this.applyAttributes(fieldset);
             fieldset.append(legend);
             fieldset.append(content);

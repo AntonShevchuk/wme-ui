@@ -28,9 +28,25 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
     label.innerHTML = unsafePolicy.createHTML(this.title)
 
     let container = document.createElement('div')
-    container.className = 'wme-ui-controls-container'
-    container.append(input)
+    container.className = 'wme-ui-controls-container controls-container'
     container.append(label)
+
+    // Add <output> element for range inputs to display current value
+    if (this.attributes.type === 'range') {
+      let output = document.createElement('output')
+      output.className = 'wme-ui-controls-output'
+      output.htmlFor.add(input.id || this.uid + '-' + this.id)
+      output.value = String(input.value)
+      const userCallback = input.onchange
+      input.onchange = null
+      input.oninput = function (e: Event) {
+        output.value = (e.target as HTMLInputElement).value
+        if (userCallback) userCallback.call(input, e)
+      }
+      container.append(output)
+    }
+
+    container.append(input)
     return container
   }
 }

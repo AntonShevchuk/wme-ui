@@ -14,7 +14,8 @@
 }
 
 .wme-ui-modal-header h5 {
-  padding: 16px 16px 0;
+  padding: 12px 12px 0;
+  font-size: 18px;
 }
 
 .wme-ui-modal-close {
@@ -26,9 +27,9 @@
   height: 20px;
   line-height: 16px;
   position: absolute;
-  right: 14px;
+  right: 12px;
   text-indent: -2px;
-  top: 14px;
+  top: 12px;
   transition: all 150ms;
   width: 20px;
   z-index: 99;

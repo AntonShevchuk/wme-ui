@@ -31,6 +31,16 @@ class WMEUIHelperElement {
   }
 
   /**
+   * Remove this element from the DOM and reset its state
+   */
+  remove (): void {
+    if (this.element) {
+      this.element.remove()
+      this.element = null
+    }
+  }
+
+  /**
    * Remove WMEUIHelperElement from the container
    */
   removeElement (element: WMEUIHelperElement): void {
@@ -47,9 +57,9 @@ class WMEUIHelperElement {
   getChildContainer (): HTMLElement | null {
     if (!this.element) return null
     return this.element.querySelector('.wme-ui-modal-content')
-      || this.element.querySelector('.wme-ui-fieldset-content')
       || this.element.querySelector('.wme-ui-panel-content')
       || this.element.querySelector('.wme-ui-tab-content')
+      || this.element.querySelector('.wme-ui-fieldset-content')
       || this.element
   }
 
@@ -58,7 +68,11 @@ class WMEUIHelperElement {
    */
   applyAttributes (element: HTMLElement): HTMLElement {
     for (const [attr, value] of Object.entries(this.attributes)) {
-      (element as any)[attr] = value
+      if (attr === 'className' && element.className) {
+        element.className += ' ' + value
+      } else {
+        (element as any)[attr] = value
+      }
     }
     return element
   }
