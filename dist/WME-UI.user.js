@@ -35,10 +35,22 @@
         }
         /**
          * Get current locale code from WME SDK
+         * Falls back to I18n or 'en' if SDK is not yet available
          */
         static getLocale() {
             if (!this._locale) {
-                this._locale = this.sdk.Settings.getLocale().localeCode;
+                try {
+                    this._locale = this.sdk.Settings.getLocale().localeCode;
+                }
+                catch (e) {
+                    // SDK not available yet (called before bootstrap)
+                    try {
+                        this._locale = I18n.currentLocale();
+                    }
+                    catch (e) {
+                        this._locale = 'en';
+                    }
+                }
             }
             return this._locale;
         }
@@ -66,12 +78,6 @@
             }
             // Store internally
             this._translations[uid] = data;
-            // Register with I18n for backward compatibility
-            const locale = this.getLocale();
-            if (!I18n.translations[locale]) {
-                I18n.translations[locale] = {};
-            }
-            I18n.translations[locale][uid] = data[locale] || data.en;
         }
         /**
          * Get translation by script name

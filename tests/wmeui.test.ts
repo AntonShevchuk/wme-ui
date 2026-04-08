@@ -52,16 +52,16 @@ describe('WMEUI', () => {
       ;(WMEUI as any)._sdk = null
     })
 
-    it('should add English translation by default', () => {
+    it('should store translation and return via t()', () => {
       WMEUI.addTranslation('test-script', {
         en: { title: 'Hello' },
         uk: { title: 'Привіт' },
       })
 
-      expect((globalThis as any).I18n.translations.en['test-script']).toEqual({ title: 'Hello' })
+      expect(WMEUI.t('test-script')).toEqual({ title: 'Hello' })
     })
 
-    it('should use locale-specific translation when available', () => {
+    it('should return locale-specific translation via t()', () => {
       mockLocale = 'uk'
 
       WMEUI.addTranslation('test-script', {
@@ -69,17 +69,17 @@ describe('WMEUI', () => {
         uk: { title: 'Привіт' },
       })
 
-      expect((globalThis as any).I18n.translations.uk['test-script']).toEqual({ title: 'Привіт' })
+      expect(WMEUI.t('test-script')).toEqual({ title: 'Привіт' })
     })
 
-    it('should fall back to English when locale is not available', () => {
+    it('should fall back to English via t() when locale is not available', () => {
       mockLocale = 'fr'
 
       WMEUI.addTranslation('test-script', {
         en: { title: 'Hello' },
       })
 
-      expect((globalThis as any).I18n.translations.fr['test-script']).toEqual({ title: 'Hello' })
+      expect(WMEUI.t('test-script')).toEqual({ title: 'Hello' })
     })
 
     it('should log error when en translation is missing', () => {

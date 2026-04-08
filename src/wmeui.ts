@@ -17,10 +17,20 @@ class WMEUI {
 
   /**
    * Get current locale code from WME SDK
+   * Falls back to I18n or 'en' if SDK is not yet available
    */
   static getLocale (): string {
     if (!this._locale) {
-      this._locale = this.sdk.Settings.getLocale().localeCode
+      try {
+        this._locale = this.sdk.Settings.getLocale().localeCode
+      } catch (e) {
+        // SDK not available yet (called before bootstrap)
+        try {
+          this._locale = I18n.currentLocale()
+        } catch (e) {
+          this._locale = 'en'
+        }
+      }
     }
     return this._locale
   }
