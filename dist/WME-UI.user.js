@@ -25,6 +25,24 @@
 
     class WMEUI {
         /**
+         * Get or create WME SDK instance (lazy)
+         */
+        static get sdk() {
+            if (!this._sdk) {
+                this._sdk = getWmeSdk({ scriptId: 'wme-ui', scriptName: 'WME UI' });
+            }
+            return this._sdk;
+        }
+        /**
+         * Get current locale code from WME SDK
+         */
+        static getLocale() {
+            if (!this._locale) {
+                this._locale = this.sdk.Settings.getLocale().localeCode;
+            }
+            return this._locale;
+        }
+        /**
          * Normalize title or UID
          */
         static normalize(string) {
@@ -34,23 +52,41 @@
          * Inject CSS styles
          */
         static addStyle(css) {
-            let style = document.createElement('style');
-            style.type = 'text/css';
+            const style = document.createElement('style');
             style.innerHTML = unsafePolicy.createHTML(css);
             document.querySelector('head').appendChild(style);
         }
         /**
-         * Add translation for the I18n object
+         * Register translations for a script
          */
         static addTranslation(uid, data) {
             if (!data.en) {
                 console.error('Default translation `en` is required');
                 return;
             }
-            const locale = I18n.currentLocale();
+            // Store internally
+            this._translations[uid] = data;
+            // Register with I18n for backward compatibility
+            const locale = this.getLocale();
+            if (!I18n.translations[locale]) {
+                I18n.translations[locale] = {};
+            }
             I18n.translations[locale][uid] = data[locale] || data.en;
         }
+        /**
+         * Get translation by script name
+         * Falls back to English if current locale not available
+         */
+        static t(uid) {
+            const locale = this.getLocale();
+            return this._translations[uid]?.[locale]
+                || this._translations[uid]?.['en']
+                || {};
+        }
     }
+    WMEUI._translations = {};
+    WMEUI._locale = null;
+    WMEUI._sdk = null;
 
     class WMEUIHelperElement {
         constructor(uid, id, title = null, attributes = {}) {

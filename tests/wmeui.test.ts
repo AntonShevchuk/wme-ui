@@ -3,6 +3,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { WMEUI } from '../src/wmeui'
 
+// Mock getWmeSdk
+let mockLocale = 'en'
+;(globalThis as any).getWmeSdk = () => ({
+  Settings: {
+    getLocale: () => ({ localeCode: mockLocale, localeName: 'English' }),
+  },
+})
+
 describe('WMEUI', () => {
   describe('normalize', () => {
     it('should replace non-word characters with dashes and lowercase', () => {
@@ -32,11 +40,16 @@ describe('WMEUI', () => {
 
   describe('addTranslation', () => {
     beforeEach(() => {
+      mockLocale = 'en'
       ;(globalThis as any).I18n = {
-        currentLocale: () => 'en',
-        translations: { en: {} },
-        t: (key: string) => (globalThis as any).I18n.translations.en[key],
+        currentLocale: () => mockLocale,
+        translations: { en: {}, uk: {}, fr: {} },
+        t: (key: string) => (globalThis as any).I18n.translations[mockLocale]?.[key],
       }
+      // Reset WMEUI internal state
+      ;(WMEUI as any)._locale = null
+      ;(WMEUI as any)._translations = {}
+      ;(WMEUI as any)._sdk = null
     })
 
     it('should add English translation by default', () => {
@@ -49,8 +62,7 @@ describe('WMEUI', () => {
     })
 
     it('should use locale-specific translation when available', () => {
-      ;(globalThis as any).I18n.currentLocale = () => 'uk'
-      ;(globalThis as any).I18n.translations.uk = {}
+      mockLocale = 'uk'
 
       WMEUI.addTranslation('test-script', {
         en: { title: 'Hello' },
@@ -61,8 +73,7 @@ describe('WMEUI', () => {
     })
 
     it('should fall back to English when locale is not available', () => {
-      ;(globalThis as any).I18n.currentLocale = () => 'fr'
-      ;(globalThis as any).I18n.translations.fr = {}
+      mockLocale = 'fr'
 
       WMEUI.addTranslation('test-script', {
         en: { title: 'Hello' },
@@ -80,6 +91,71 @@ describe('WMEUI', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith('Default translation `en` is required')
       consoleSpy.mockRestore()
+    })
+  })
+
+  describe('t', () => {
+    beforeEach(() => {
+      mockLocale = 'en'
+      ;(WMEUI as any)._locale = null
+      ;(WMEUI as any)._translations = {}
+      ;(WMEUI as any)._sdk = null
+      ;(globalThis as any).I18n = {
+        translations: { en: {}, uk: {} },
+      }
+    })
+
+    it('should return translation for current locale', () => {
+      WMEUI.addTranslation('my-script', {
+        en: { title: 'Hello' },
+        uk: { title: 'Привіт' },
+      })
+
+      expect(WMEUI.t('my-script').title).toBe('Hello')
+    })
+
+    it('should return locale-specific translation', () => {
+      mockLocale = 'uk'
+
+      WMEUI.addTranslation('my-script', {
+        en: { title: 'Hello' },
+        uk: { title: 'Привіт' },
+      })
+
+      expect(WMEUI.t('my-script').title).toBe('Привіт')
+    })
+
+    it('should fall back to English', () => {
+      mockLocale = 'fr'
+
+      WMEUI.addTranslation('my-script', {
+        en: { title: 'Hello' },
+      })
+
+      expect(WMEUI.t('my-script').title).toBe('Hello')
+    })
+
+    it('should return empty object for unknown uid', () => {
+      expect(WMEUI.t('unknown')).toEqual({})
+    })
+  })
+
+  describe('getLocale', () => {
+    beforeEach(() => {
+      ;(WMEUI as any)._locale = null
+      ;(WMEUI as any)._sdk = null
+    })
+
+    it('should return locale from WME SDK', () => {
+      mockLocale = 'uk'
+      expect(WMEUI.getLocale()).toBe('uk')
+    })
+
+    it('should cache locale', () => {
+      mockLocale = 'uk'
+      WMEUI.getLocale()
+      mockLocale = 'fr'
+      expect(WMEUI.getLocale()).toBe('uk') // still cached
     })
   })
 })
