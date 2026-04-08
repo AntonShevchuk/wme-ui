@@ -352,13 +352,13 @@
         }
     }
 
-    var css_248z$2 = ".wme-ui-panel-group {\n  /* panel container */\n}\n\n.wme-ui-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-controls {\n  /* panel controls container */\n  padding: 8px;\n}\n";
+    var css_248z$3 = ".wme-ui-panel-group {\n  /* panel container */\n}\n\n.wme-ui-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-controls {\n  /* panel controls container */\n  padding: 8px;\n}\n";
 
     function injectPanelStyles() {
         if (!document.querySelector('style[data-wme-ui-panel]')) {
             const style = document.createElement('style');
             style.setAttribute('data-wme-ui-panel', '');
-            style.innerHTML = unsafePolicy.createHTML(css_248z$2);
+            style.innerHTML = unsafePolicy.createHTML(css_248z$3);
             document.head.appendChild(style);
         }
     }
@@ -386,13 +386,13 @@
         }
     }
 
-    var css_248z$1 = ".wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}";
+    var css_248z$2 = ".wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-title {\n  /* tab title container */\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}\n\n.wme-ui-tab-group {\n  /* tab root container */\n}";
 
     function injectTabStyles() {
         if (!document.querySelector('style[data-wme-ui-tab]')) {
             const style = document.createElement('style');
             style.setAttribute('data-wme-ui-tab', '');
-            style.innerHTML = unsafePolicy.createHTML(css_248z$1);
+            style.innerHTML = unsafePolicy.createHTML(css_248z$2);
             document.head.appendChild(style);
         }
     }
@@ -439,13 +439,13 @@
         }
     }
 
-    var css_248z = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-body {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
+    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-body {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
 
     function injectModalStyles() {
         if (!document.querySelector('style[data-wme-ui-modal]')) {
             const style = document.createElement('style');
             style.setAttribute('data-wme-ui-modal', '');
-            style.innerHTML = unsafePolicy.createHTML(css_248z);
+            style.innerHTML = unsafePolicy.createHTML(css_248z$1);
             document.head.appendChild(style);
         }
     }
@@ -488,8 +488,19 @@
         }
     }
 
+    var css_248z = ".wme-ui-legend {\n  /* fieldset legend/title */\n}\n\n.wme-ui-fieldset-controls {\n  /* fieldset controls container */\n}\n";
+
+    function injectFieldsetStyles() {
+        if (!document.querySelector('style[data-wme-ui-fieldset]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-wme-ui-fieldset', '');
+            style.innerHTML = unsafePolicy.createHTML(css_248z);
+            document.head.appendChild(style);
+        }
+    }
     class WMEUIHelperFieldset extends WMEUIHelperContainer {
         toHTML() {
+            injectFieldsetStyles();
             let legend = document.createElement('legend');
             legend.className = 'wme-ui-legend';
             legend.innerHTML = unsafePolicy.createHTML(this.title);

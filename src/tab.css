@@ -14,3 +14,15 @@
 .wme-ui-tab-header .wme-ui-tab-image {
   height: 42px;
 }
+
+.wme-ui-tab-title {
+  /* tab title container */
+}
+
+.wme-ui-tab-content {
+  padding: 8px;
+}
+
+.wme-ui-tab-group {
+  /* tab root container */
+}
