@@ -1,3 +1,7 @@
+.wme-ui-tab {
+  /* tab root container */
+}
+
 .wme-ui-tab-header {
   align-items: center;
   display: flex;
@@ -21,8 +25,4 @@
 
 .wme-ui-tab-content {
   padding: 8px;
-}
-
-.wme-ui-tab-group {
-  /* tab root container */
 }

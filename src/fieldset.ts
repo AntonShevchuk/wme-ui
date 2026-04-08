@@ -16,17 +16,18 @@ class WMEUIHelperFieldset extends WMEUIHelperContainer {
     injectFieldsetStyles()
 
     let legend = document.createElement('legend')
-    legend.className = 'wme-ui-legend'
+    legend.className = 'wme-ui-fieldset-legend'
     legend.innerHTML = unsafePolicy.createHTML(this.title)
 
-    let controls = document.createElement('div')
-    controls.className = 'wme-ui-fieldset-controls'
-    this.elements.forEach(element => controls.append(element.html()))
+    let content = document.createElement('div')
+    content.className = 'wme-ui-fieldset-content'
+
+    this.elements.forEach(element => content.append(element.html()))
 
     let fieldset = document.createElement('fieldset')
     fieldset = this.applyAttributes(fieldset) as HTMLFieldSetElement
     fieldset.append(legend)
-    fieldset.append(controls)
+    fieldset.append(content)
     return fieldset
   }
 }

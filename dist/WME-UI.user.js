@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.6.0
+// @version      0.6.1
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -124,14 +124,14 @@
         }
         /**
          * Find the child container element in the rendered DOM
-         * Subclasses use .controls or .button-toolbar as the container for children
          */
         getChildContainer() {
             if (!this.element)
                 return null;
-            return this.element.querySelector('.wme-ui-controls')
+            return this.element.querySelector('.wme-ui-modal-content')
+                || this.element.querySelector('.wme-ui-fieldset-content')
+                || this.element.querySelector('.wme-ui-panel-content')
                 || this.element.querySelector('.wme-ui-tab-content')
-                || this.element.querySelector('.wme-ui-body')
                 || this.element;
         }
         /**
@@ -178,12 +178,14 @@
     class WMEUIHelperControlInput extends WMEUIHelperControl {
         toHTML() {
             let input = document.createElement('input');
+            input.className = 'wme-ui-controls-input';
             input = this.applyAttributes(input);
             let label = document.createElement('label');
+            label.className = 'wme-ui-controls-label';
             label.htmlFor = input.id || this.uid + '-' + this.id;
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let container = document.createElement('div');
-            container.className = 'controls-container';
+            container.className = 'wme-ui-controls-container';
             container.append(input);
             container.append(label);
             return container;
@@ -200,7 +202,7 @@
         }
         toHTML() {
             let button = document.createElement('button');
-            button.className = 'waze-btn waze-btn-small waze-btn-white';
+            button.className = 'wme-ui-controls-button waze-btn waze-btn-small waze-btn-white';
             button.innerHTML = unsafePolicy.createHTML(this.title);
             button.title = this.description;
             button.onclick = this.callback;
@@ -225,6 +227,7 @@
     class WMEUIHelperText extends WMEUIHelperElement {
         toHTML() {
             let p = document.createElement('p');
+            p.className = 'wme-ui-helper-text';
             p = this.applyAttributes(p);
             p.innerHTML = unsafePolicy.createHTML(this.title);
             return p;
@@ -352,7 +355,7 @@
         }
     }
 
-    var css_248z$3 = ".wme-ui-panel-group {\n  /* panel container */\n}\n\n.wme-ui-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-controls {\n  /* panel controls container */\n  padding: 8px;\n}\n";
+    var css_248z$3 = ".wme-ui-panel {\n  /* panel */\n}\n\n.wme-ui-panel-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-content {\n  /* panel controls container */\n  padding: 8px;\n}\n";
 
     function injectPanelStyles() {
         if (!document.querySelector('style[data-wme-ui-panel]')) {
@@ -373,20 +376,20 @@
             injectPanelStyles();
             let label = document.createElement('wz-label');
             label.htmlFor = '';
-            label.className = 'wme-ui-label';
+            label.className = 'wme-ui-panel-label';
             label.innerHTML = unsafePolicy.createHTML(this.title);
-            let controls = document.createElement('div');
-            controls.className = 'wme-ui-panel-controls';
-            this.elements.forEach(element => controls.append(element.html()));
-            let group = document.createElement('div');
-            group.className = 'wme-ui-panel-group form-group';
-            group.append(label);
-            group.append(controls);
-            return group;
+            let content = document.createElement('div');
+            content.className = 'wme-ui-panel-content';
+            this.elements.forEach(element => content.append(element.html()));
+            let panel = document.createElement('div');
+            panel.className = 'wme-ui-panel form-group';
+            panel.append(label);
+            panel.append(content);
+            return panel;
         }
     }
 
-    var css_248z$2 = ".wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-title {\n  /* tab title container */\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}\n\n.wme-ui-tab-group {\n  /* tab root container */\n}";
+    var css_248z$2 = ".wme-ui-tab {\n  /* tab root container */\n}\n\n.wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-title {\n  /* tab title container */\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}\n";
 
     function injectTabStyles() {
         if (!document.querySelector('style[data-wme-ui-tab]')) {
@@ -431,15 +434,15 @@
             let content = document.createElement('div');
             content.className = 'wme-ui-tab-content';
             this.elements.forEach(element => content.append(element.html()));
-            let group = document.createElement('div');
-            group.className = 'wme-ui-tab-group form-group';
-            group.append(header);
-            group.append(content);
-            return group;
+            let tab = document.createElement('div');
+            tab.className = 'wme-ui-tab form-group';
+            tab.append(header);
+            tab.append(content);
+            return tab;
         }
     }
 
-    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-body {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
+    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 16px 16px 0;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 14px;\n  text-indent: -2px;\n  top: 14px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-content {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
 
     function injectModalStyles() {
         if (!document.querySelector('style[data-wme-ui-modal]')) {
@@ -473,22 +476,22 @@
             header.className = 'wme-ui-modal-header';
             header.prepend(title);
             header.prepend(close);
-            let body = document.createElement('div');
-            body.className = 'wme-ui-modal-body';
-            this.elements.forEach(element => body.append(element.html()));
+            let content = document.createElement('div');
+            content.className = 'wme-ui-modal-content';
+            this.elements.forEach(element => content.append(element.html()));
             let footer = document.createElement('div');
             footer.className = 'wme-ui-modal-footer';
             let container = document.createElement('div');
             container.className = 'wme-ui-modal-container';
             container.append(header);
-            container.append(body);
+            container.append(content);
             container.append(footer);
             modal.append(container);
             return modal;
         }
     }
 
-    var css_248z = ".wme-ui-legend {\n  /* fieldset legend/title */\n}\n\n.wme-ui-fieldset-controls {\n  /* fieldset controls container */\n}\n";
+    var css_248z = ".wme-ui-fieldset-legend {\n  /* fieldset legend/title */\n}\n\n.wme-ui-fieldset-content {\n  /* fieldset controls container */\n}\n";
 
     function injectFieldsetStyles() {
         if (!document.querySelector('style[data-wme-ui-fieldset]')) {
@@ -502,15 +505,15 @@
         toHTML() {
             injectFieldsetStyles();
             let legend = document.createElement('legend');
-            legend.className = 'wme-ui-legend';
+            legend.className = 'wme-ui-fieldset-legend';
             legend.innerHTML = unsafePolicy.createHTML(this.title);
-            let controls = document.createElement('div');
-            controls.className = 'wme-ui-fieldset-controls';
-            this.elements.forEach(element => controls.append(element.html()));
+            let content = document.createElement('div');
+            content.className = 'wme-ui-fieldset-content';
+            this.elements.forEach(element => content.append(element.html()));
             let fieldset = document.createElement('fieldset');
             fieldset = this.applyAttributes(fieldset);
             fieldset.append(legend);
-            fieldset.append(controls);
+            fieldset.append(content);
             return fieldset;
         }
     }

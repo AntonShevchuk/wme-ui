@@ -1,23 +1,23 @@
-.wme-ui-panel {
+.wme-ui-modal {
   width: 320px;
   background: #fff;
   margin: 15px;
   border-radius: 5px;
 }
 
-.wme-ui-panel-container {
+.wme-ui-modal-container {
   position: relative;
 }
 
-.wme-ui-header {
+.wme-ui-modal-header {
   position: relative;
 }
 
-.wme-ui-header h5 {
+.wme-ui-modal-header h5 {
   padding: 16px 16px 0;
 }
 
-.wme-ui-close-panel {
+.wme-ui-modal-close {
   background: #fff;
   border: 1px solid #ececec;
   border-radius: 100%;
@@ -34,11 +34,11 @@
   z-index: 99;
 }
 
-.wme-ui-body {
+.wme-ui-modal-content {
   max-height: 70vh;
   overflow: auto;
 }
 
-.wme-ui-footer {
+.wme-ui-modal-footer {
   padding: 4px 0;
 }

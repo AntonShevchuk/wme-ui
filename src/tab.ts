@@ -58,17 +58,17 @@ class WMEUIHelperTab extends WMEUIHelperContainer {
     )
     header.append(title)
 
-    let controls = document.createElement('div')
-    controls.className = 'button-toolbar'
+    let content = document.createElement('div')
+    content.className = 'wme-ui-tab-content'
 
-    this.elements.forEach(element => controls.append(element.html()))
+    this.elements.forEach(element => content.append(element.html()))
 
-    let group = document.createElement('div')
-    group.className = 'form-group'
-    group.append(header)
-    group.append(controls)
+    let tab = document.createElement('div')
+    tab.className = 'wme-ui-tab form-group'
+    tab.append(header)
+    tab.append(content)
 
-    return group
+    return tab
   }
 }
 

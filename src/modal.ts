@@ -23,41 +23,42 @@ class WMEUIHelperModal extends WMEUIHelperContainer {
   toHTML (): HTMLElement {
     injectModalStyles()
 
-    let panel = document.createElement('div')
-    panel.className = 'wme-ui-panel'
-    this.applyAttributes(panel)
+    let modal = document.createElement('div')
+    modal.className = 'wme-ui-modal'
+    this.applyAttributes(modal)
 
     let close = document.createElement('button')
-    close.className = 'wme-ui-close-panel'
+    close.className = 'wme-ui-modal-close'
     close.innerText = '\u00d7'
     close.onclick = function () {
-      panel.remove()
+      modal.remove()
     }
 
     let title = document.createElement('h5')
     title.innerHTML = unsafePolicy.createHTML(this.title)
 
     let header = document.createElement('div')
-    header.className = 'wme-ui-header'
+    header.className = 'wme-ui-modal-header'
     header.prepend(title)
     header.prepend(close)
 
-    let body = document.createElement('div')
-    body.className = 'wme-ui-body'
-    this.elements.forEach(element => body.append(element.html()))
+    let content = document.createElement('div')
+    content.className = 'wme-ui-modal-content'
+
+    this.elements.forEach(element => content.append(element.html()))
 
     let footer = document.createElement('div')
-    footer.className = 'wme-ui-footer'
+    footer.className = 'wme-ui-modal-footer'
 
     let container = document.createElement('div')
-    container.className = 'wme-ui-panel-container'
+    container.className = 'wme-ui-modal-container'
     container.append(header)
-    container.append(body)
+    container.append(content)
     container.append(footer)
 
-    panel.append(container)
+    modal.append(container)
 
-    return panel
+    return modal
   }
 }
 

@@ -6,7 +6,7 @@ class WMEUI {
   private static _sdk: any = null
 
   /**
-   * Get or create WME SDK instance (lazy)
+   * Get or create a WME SDK instance (lazy)
    */
   private static get sdk (): any {
     if (!this._sdk) {
@@ -24,12 +24,8 @@ class WMEUI {
       try {
         this._locale = this.sdk.Settings.getLocale().localeCode
       } catch (e) {
-        // SDK not available yet (called before bootstrap)
-        try {
-          this._locale = I18n.currentLocale()
-        } catch (e) {
-          this._locale = 'en'
-        }
+        // SDK is not available yet (called before bootstrap)
+        this._locale = 'en'
       }
     }
     return this._locale

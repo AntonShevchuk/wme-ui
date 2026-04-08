@@ -25,18 +25,19 @@ class WMEUIHelperPanel extends WMEUIHelperContainer {
 
     let label = document.createElement('wz-label') as HTMLElement
     ;(label as any).htmlFor = ''
-    label.className = 'wme-ui-label'
+    label.className = 'wme-ui-panel-label'
     label.innerHTML = unsafePolicy.createHTML(this.title)
 
-    let controls = document.createElement('div')
-    controls.className = 'wme-ui-panel-controls'
-    this.elements.forEach(element => controls.append(element.html()))
+    let content = document.createElement('div')
+    content.className = 'wme-ui-panel-content'
 
-    let group = document.createElement('div')
-    group.className = 'wme-ui-panel-group form-group'
-    group.append(label)
-    group.append(controls)
-    return group
+    this.elements.forEach(element => content.append(element.html()))
+
+    let panel = document.createElement('div')
+    panel.className = 'wme-ui-panel form-group'
+    panel.append(label)
+    panel.append(content)
+    return panel
   }
 }
 

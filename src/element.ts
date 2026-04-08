@@ -43,13 +43,13 @@ class WMEUIHelperElement {
 
   /**
    * Find the child container element in the rendered DOM
-   * Subclasses use .controls or .button-toolbar as the container for children
    */
   getChildContainer (): HTMLElement | null {
     if (!this.element) return null
-    return this.element.querySelector('.controls')
-      || this.element.querySelector('.button-toolbar')
-      || this.element.querySelector('.wme-ui-body')
+    return this.element.querySelector('.wme-ui-modal-content')
+      || this.element.querySelector('.wme-ui-fieldset-content')
+      || this.element.querySelector('.wme-ui-panel-content')
+      || this.element.querySelector('.wme-ui-tab-content')
       || this.element
   }
 

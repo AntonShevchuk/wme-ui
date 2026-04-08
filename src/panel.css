@@ -1,12 +1,12 @@
-.wme-ui-panel-group {
-  /* panel container */
+.wme-ui-panel {
+  /* panel */
 }
 
-.wme-ui-label {
+.wme-ui-panel-label {
   /* panel title label */
 }
 
-.wme-ui-panel-controls {
+.wme-ui-panel-content {
   /* panel controls container */
   padding: 8px;
 }
