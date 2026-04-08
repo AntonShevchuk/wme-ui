@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.6.1
+// @version      0.6.2
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
