@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.6.2
+// @version      0.6.3
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -200,6 +200,7 @@
             label.innerHTML = unsafePolicy.createHTML(this.title);
             let container = document.createElement('div');
             container.className = 'wme-ui-controls-container controls-container';
+            container.append(input);
             container.append(label);
             // Add <output> element for range inputs to display current value
             if (this.attributes.type === 'range') {
@@ -216,7 +217,6 @@
                 };
                 container.append(output);
             }
-            container.append(input);
             return container;
         }
     }

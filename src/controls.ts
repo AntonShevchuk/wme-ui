@@ -29,6 +29,7 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
 
     let container = document.createElement('div')
     container.className = 'wme-ui-controls-container controls-container'
+    container.append(input)
     container.append(label)
 
     // Add <output> element for range inputs to display current value
@@ -46,7 +47,6 @@ class WMEUIHelperControlInput extends WMEUIHelperControl {
       container.append(output)
     }
 
-    container.append(input)
     return container
   }
 }

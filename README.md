@@ -289,8 +289,9 @@ src/
 
 ## Links
 
-Author homepage: https://anton.shevchuk.name/
-Author pet projects: https://hohli.com/
-Support author: https://donate.hohli.com/
-Script homepage: https://github.com/AntonShevchuk/wme-ui
-GreasyFork: https://greasyfork.org/en/scripts/450320-wme-ui
+Author homepage: https://anton.shevchuk.name/  
+Author pet projects: https://hohli.com/  
+Support author: https://donate.hohli.com/  
+
+Script homepage: https://github.com/AntonShevchuk/wme-ui  
+GreasyFork: https://greasyfork.org/en/scripts/450320-wme-ui  
