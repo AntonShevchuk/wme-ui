@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME UI
-// @version      0.6.3
+// @version      0.7.0
 // @description  UI Library for Waze Map Editor Greasy Fork scripts
 // @license      MIT License
 // @author       Anton Shevchuk
@@ -384,7 +384,7 @@
         }
     }
 
-    var css_248z$3 = ".wme-ui-panel {\n  /* panel */\n}\n\n.wme-ui-panel-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-content {\n  /* panel controls container */\n  padding: 8px;\n}\n";
+    var css_248z$3 = ".wme-ui-panel {\n  /* panel */\n}\n\n.wme-ui-panel-label {\n  /* panel title label */\n}\n\n.wme-ui-panel-content {\n  padding: 8px;\n}\n\n.wme-ui-panel-content .wme-ui-controls-button {\n  margin: 2px;\n}\n\n.wme-ui-controls-button:hover {\n  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), inset 0 0 100px 100px rgba(255, 255, 255, 0.3);\n  transition: box-shadow 100ms linear;\n}\n";
 
     function injectPanelStyles() {
         if (!document.querySelector('style[data-wme-ui-panel]')) {
@@ -417,7 +417,7 @@
         }
     }
 
-    var css_248z$2 = ".wme-ui-tab {\n  /* tab root container */\n}\n\n.wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-title {\n  /* tab title container */\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}\n";
+    var css_248z$2 = ".wme-ui-tab {\n  /* tab root container */\n}\n\n.wme-ui-tab-header {\n  align-items: center;\n  display: flex;\n  gap: 9px;\n  justify-content: stretch;\n  padding: 8px;\n  width: 100%;\n  border-bottom: 1px solid #e5e5e5;\n}\n\n.wme-ui-tab-header .wme-ui-tab-icon {\n  font-size: 24px;\n}\n\n.wme-ui-tab-header .wme-ui-tab-image {\n  height: 42px;\n}\n\n.wme-ui-tab-title {\n  /* tab title container */\n}\n\n.wme-ui-tab-content {\n  padding: 8px;\n}\n\n/* Common footer styles for script tabs */\n.wme-ui-tab-content p[class$=\"-info\"] {\n  border-top: 1px solid #ccc;\n  color: #777;\n  font-size: x-small;\n  margin-top: 15px;\n  padding-top: 10px;\n  text-align: center;\n}\n\n#sidebar .wme-ui-tab-content p[class$=\"-blue\"] {\n  background-color: #0057B8;\n  color: white;\n  height: 32px;\n  text-align: center;\n  line-height: 32px;\n  font-size: 24px;\n  margin: 0;\n}\n\n#sidebar .wme-ui-tab-content p[class$=\"-yellow\"] {\n  background-color: #FFDD00;\n  color: black;\n  height: 32px;\n  text-align: center;\n  line-height: 32px;\n  font-size: 24px;\n  margin: 0;\n}\n";
 
     function injectTabStyles() {
         if (!document.querySelector('style[data-wme-ui-tab]')) {
@@ -470,7 +470,7 @@
         }
     }
 
-    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 12px 12px 0;\n  font-size: 18px;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 12px;\n  text-indent: -2px;\n  top: 12px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-content {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
+    var css_248z$1 = ".wme-ui-modal {\n  width: 320px;\n  background: #fff;\n  margin: 15px;\n  border-radius: 5px;\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);\n}\n\n.wme-ui-modal-container {\n  position: relative;\n}\n\n.wme-ui-modal-header {\n  position: relative;\n}\n\n.wme-ui-modal-header h5 {\n  padding: 12px 12px 0;\n  font-size: 18px;\n}\n\n.wme-ui-modal-close {\n  background: #fff;\n  border: 1px solid #ececec;\n  border-radius: 100%;\n  cursor: pointer;\n  font-size: 20px;\n  height: 20px;\n  line-height: 16px;\n  position: absolute;\n  right: 12px;\n  text-indent: -2px;\n  top: 12px;\n  transition: all 150ms;\n  width: 20px;\n  z-index: 99;\n}\n\n.wme-ui-modal-close:hover {\n  background: #f0f0f0;\n  border-color: #ccc;\n}\n\n.wme-ui-modal-close:focus-visible {\n  outline: 2px solid #4a90d9;\n  outline-offset: 2px;\n}\n\n.wme-ui-modal-content {\n  max-height: 70vh;\n  overflow: auto;\n}\n\n.wme-ui-modal-footer {\n  padding: 4px 0;\n}\n";
 
     function injectModalStyles() {
         if (!document.querySelector('style[data-wme-ui-modal]')) {
@@ -519,7 +519,7 @@
         }
     }
 
-    var css_248z = ".wme-ui-fieldset {\n    margin: 4px 0;\n}\n\n.wme-ui-fieldset-legend {\n    cursor: pointer;\n    font-size: 12px;\n    font-weight: bold;\n    width: 100%;\n    text-align: right;\n    margin: 0;\n    padding: 2px 8px;\n    background-color: #f6f7f7;\n\n    border-radius: 8px 8px 0 0;\n    border: 1px solid #e5e5e5;\n}\n\n.wme-ui-fieldset-legend::after {\n    content: \"\\00a0\\2191\";\n    font-size: 10px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-legend::after {\n    content: \"\\00a0\\2193\";\n}\n\n.wme-ui-fieldset-content {\n    border: 1px solid #ddd;\n    border-top: 0;\n    border-radius: 0 0 8px 8px;\n    padding: 8px;\n}\n\n.wme-ui-fieldset-content label {\n    white-space: normal;\n    font-weight: normal;\n    font-size: 13px;\n}\n\n.wme-ui-fieldset-content input[type=\"text\"] {\n    float: right;\n    height: 28px;\n}\n\n.wme-ui-fieldset-content input[type=\"number\"] {\n    float: right;\n    height: 28px;\n    width: 60px;\n    text-align: right;\n}\n\n.wme-ui-fieldset-content input[type=\"range\"] {\n    width: 100%;\n}\n\n.wme-ui-controls-output {\n    float: right;\n    font-size: 13px;\n    min-width: 30px;\n    text-align: right;\n    padding: 2px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-legend {\n    border-radius: 8px;\n}\n\nfieldset.collapsed .wme-ui-fieldset-content {\n    display: none;\n}\n";
+    var css_248z = ".wme-ui-fieldset {\n    margin: 4px 0;\n    width: 100%;\n}\n\n.wme-ui-fieldset-legend {\n    cursor: pointer;\n    font-size: 12px;\n    font-weight: bold;\n    width: 100%;\n    text-align: right;\n    margin: 0;\n    padding: 2px 8px;\n    background-color: #f6f7f7;\n\n    border-radius: 8px 8px 0 0;\n    border: 1px solid #e5e5e5;\n}\n\n.wme-ui-fieldset-legend::after {\n    content: \"\\25B6\";\n    font-size: 8px;\n    display: inline-block;\n    margin-left: 4px;\n    transition: transform 0.35s ease-in-out;\n    transform: rotate(90deg);\n}\n\n.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend::after {\n    transform: rotate(0deg);\n}\n\n.wme-ui-fieldset-content {\n    border: 1px solid #ddd;\n    border-top: 0;\n    border-radius: 0 0 8px 8px;\n    padding: 8px;\n}\n\n.wme-ui-fieldset-content p {\n    margin-bottom: 2px;\n}\n\n.wme-ui-fieldset-content label {\n    white-space: normal;\n    font-weight: normal;\n    font-size: 13px;\n    max-width: 80%;\n}\n\n.wme-ui-fieldset-content input[type=\"text\"] {\n    float: right;\n    height: 28px;\n}\n\n.wme-ui-fieldset-content input[type=\"number\"] {\n    float: right;\n    height: 28px;\n    width: 60px;\n    text-align: right;\n}\n\n.wme-ui-fieldset-content input[type=\"range\"] {\n    width: 100%;\n}\n\n.wme-ui-controls-button:focus-visible,\n.wme-ui-controls-input:focus-visible,\n.wme-ui-fieldset-legend:focus-visible {\n    outline: 2px solid #4a90d9;\n    outline-offset: 2px;\n}\n\n.wme-ui-controls-output {\n    float: right;\n    font-size: 13px;\n    min-width: 30px;\n    text-align: right;\n    padding: 2px;\n}\n\n.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend {\n    border-radius: 8px;\n    transition: background-color 0.2s ease;\n}\n\n.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend:hover {\n    background-color: #edeef0;\n}\n\n.wme-ui-fieldset.collapsed .wme-ui-fieldset-content {\n    display: none;\n}\n";
 
     function injectFieldsetStyles() {
         if (!document.querySelector('style[data-wme-ui-fieldset]')) {

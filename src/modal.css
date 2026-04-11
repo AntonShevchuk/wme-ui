@@ -3,6 +3,7 @@
   background: #fff;
   margin: 15px;
   border-radius: 5px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .wme-ui-modal-container {
@@ -33,6 +34,16 @@
   transition: all 150ms;
   width: 20px;
   z-index: 99;
+}
+
+.wme-ui-modal-close:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+.wme-ui-modal-close:focus-visible {
+  outline: 2px solid #4a90d9;
+  outline-offset: 2px;
 }
 
 .wme-ui-modal-content {

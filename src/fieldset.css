@@ -1,5 +1,6 @@
 .wme-ui-fieldset {
     margin: 4px 0;
+    width: 100%;
 }
 
 .wme-ui-fieldset-legend {
@@ -17,12 +18,16 @@
 }
 
 .wme-ui-fieldset-legend::after {
-    content: "\00a0\2191";
-    font-size: 10px;
+    content: "\25B6";
+    font-size: 8px;
+    display: inline-block;
+    margin-left: 4px;
+    transition: transform 0.35s ease-in-out;
+    transform: rotate(90deg);
 }
 
-fieldset.collapsed .wme-ui-fieldset-legend::after {
-    content: "\00a0\2193";
+.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend::after {
+    transform: rotate(0deg);
 }
 
 .wme-ui-fieldset-content {
@@ -32,10 +37,15 @@ fieldset.collapsed .wme-ui-fieldset-legend::after {
     padding: 8px;
 }
 
+.wme-ui-fieldset-content p {
+    margin-bottom: 2px;
+}
+
 .wme-ui-fieldset-content label {
     white-space: normal;
     font-weight: normal;
     font-size: 13px;
+    max-width: 80%;
 }
 
 .wme-ui-fieldset-content input[type="text"] {
@@ -54,6 +64,13 @@ fieldset.collapsed .wme-ui-fieldset-legend::after {
     width: 100%;
 }
 
+.wme-ui-controls-button:focus-visible,
+.wme-ui-controls-input:focus-visible,
+.wme-ui-fieldset-legend:focus-visible {
+    outline: 2px solid #4a90d9;
+    outline-offset: 2px;
+}
+
 .wme-ui-controls-output {
     float: right;
     font-size: 13px;
@@ -62,10 +79,15 @@ fieldset.collapsed .wme-ui-fieldset-legend::after {
     padding: 2px;
 }
 
-fieldset.collapsed .wme-ui-fieldset-legend {
+.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend {
     border-radius: 8px;
+    transition: background-color 0.2s ease;
 }
 
-fieldset.collapsed .wme-ui-fieldset-content {
+.wme-ui-fieldset.collapsed .wme-ui-fieldset-legend:hover {
+    background-color: #edeef0;
+}
+
+.wme-ui-fieldset.collapsed .wme-ui-fieldset-content {
     display: none;
 }
